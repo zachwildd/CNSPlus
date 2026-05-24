@@ -1,0 +1,46 @@
+{
+  "runtime": "Net100",
+  "defaultVariables": null,
+  "documentGenerator": {
+    "fromDocument": {
+      "json": "../../openapi/openapi.json",
+      "url": null,
+      "output": null,
+      "newLineBehavior": "Auto"
+    }
+  },
+  "codeGenerators": {
+    "openApiToCSharpClient": {
+      "className": "{controller}Client",
+      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "generateClientClasses": true,
+      "generateClientInterfaces": true,
+      "generateDtoTypes": true,
+      "injectHttpClient": true,
+      "useBaseUrl": false,
+      "generateBaseUrlProperty": false,
+      "generateSyncMethods": false,
+      "exposeJsonSerializerSettings": false,
+      "clientClassAccessModifier": "public",
+      "typeAccessModifier": "public",
+      "jsonLibrary": "SystemTextJson",
+      "namespace": "CNSPlus.Shared",
+      "dateType": "System.DateTimeOffset",
+      "dateTimeType": "System.DateTimeOffset",
+      "timeType": "System.TimeSpan",
+      "timeSpanType": "System.TimeSpan",
+      "arrayType": "System.Collections.Generic.IReadOnlyList",
+      "arrayInstanceType": "System.Collections.Generic.List",
+      "dictionaryType": "System.Collections.Generic.IReadOnlyDictionary",
+      "dictionaryInstanceType": "System.Collections.Generic.Dictionary",
+      "responseArrayType": "System.Collections.Generic.IReadOnlyList",
+      "responseDictionaryType": "System.Collections.Generic.IReadOnlyDictionary",
+      "generateNullableReferenceTypes": true,
+      "generateDataAnnotations": false,
+      "requiredPropertiesMustBeDefined": true,
+      "classStyle": "Poco",
+      "output": "ApiClient.cs",
+      "newLineBehavior": "Auto"
+    }
+  }
+}

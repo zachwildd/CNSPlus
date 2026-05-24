@@ -1,3 +1,4 @@
+using CNSPlus.Shared;
 using CNSPlus.Web.Auth;
 using CNSPlus.Web.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,6 +11,15 @@ builder.Services.AddRazorComponents()
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
+
+var apiBaseUrl = builder.Configuration["Api:BaseUrl"]
+    ?? throw new InvalidOperationException("Api:BaseUrl must be configured.");
+var apiBaseUri = new Uri(apiBaseUrl);
+
+builder.Services.AddHttpClient<ICreatorsClient, CreatorsClient>(c => c.BaseAddress = apiBaseUri);
+builder.Services.AddHttpClient<ISeriesClient, SeriesClient>(c => c.BaseAddress = apiBaseUri);
+builder.Services.AddHttpClient<IComicsClient, ComicsClient>(c => c.BaseAddress = apiBaseUri);
+builder.Services.AddHttpClient<ICharactersClient, CharactersClient>(c => c.BaseAddress = apiBaseUri);
 
 var app = builder.Build();
 

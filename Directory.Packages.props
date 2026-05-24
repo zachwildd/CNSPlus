@@ -9,6 +9,10 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.7" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.7" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0" />
+
+    <!-- Build-time code generation -->
+    <PackageVersion Include="NSwag.MSBuild" Version="14.7.1" />
 
     <!-- Test stack -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />

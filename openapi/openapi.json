@@ -3,7 +3,209 @@
   "info": {
     "title": "CNSPlus API",
     "version": "0.0.0",
-    "description": "Placeholder. Phase 2 replaces this with the real spec exported from CNSPlus.Api."
+    "description": "OpenAPI contract for the CNSPlus Express.js API. Phase 2 stub — the API itself does not exist yet; this spec is the source of truth for the NSwag-generated C# client. When CNSPlus.Api is built, scripts/sync-openapi.sh will overwrite this file with the API's exported spec."
   },
-  "paths": {}
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Local dev" },
+    { "url": "https://api.comicplus.net", "description": "Production" }
+  ],
+  "paths": {
+    "/creators/{slug}": {
+      "get": {
+        "operationId": "Creators_GetBySlug",
+        "tags": ["Creators"],
+        "summary": "Fetch a creator profile by slug.",
+        "parameters": [
+          { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Creator" } } }
+          },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/series/{slug}": {
+      "get": {
+        "operationId": "Series_GetBySlug",
+        "tags": ["Series"],
+        "summary": "Fetch a series by slug.",
+        "parameters": [
+          { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Series" } } }
+          },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/series/{slug}/comics": {
+      "get": {
+        "operationId": "Series_ListComics",
+        "tags": ["Series"],
+        "summary": "List all comics in a series, ordered by position.",
+        "parameters": [
+          { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Comic" } }
+              }
+            }
+          },
+          "404": { "description": "Series not found" }
+        }
+      }
+    },
+    "/comics/{id}": {
+      "get": {
+        "operationId": "Comics_GetById",
+        "tags": ["Comics"],
+        "summary": "Fetch a single comic by id.",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Comic" } } }
+          },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/comics": {
+      "get": {
+        "operationId": "Comics_List",
+        "tags": ["Comics"],
+        "summary": "List recent comics, optionally filtered to featured.",
+        "parameters": [
+          { "name": "featured", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Comic" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/characters/{slug}": {
+      "get": {
+        "operationId": "Characters_GetBySlug",
+        "tags": ["Characters"],
+        "summary": "Fetch a character profile by slug.",
+        "parameters": [
+          { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Character" } } }
+          },
+          "404": { "description": "Not found" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Creator": {
+        "type": "object",
+        "required": ["id", "slug", "displayName", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "slug": { "type": "string" },
+          "displayName": { "type": "string" },
+          "bio": { "type": "string", "nullable": true },
+          "avatarUrl": { "type": "string", "format": "uri", "nullable": true },
+          "websiteUrl": { "type": "string", "format": "uri", "nullable": true },
+          "socialLinks": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SocialLink" }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SocialLink": {
+        "type": "object",
+        "required": ["platform", "url"],
+        "properties": {
+          "platform": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      },
+      "Series": {
+        "type": "object",
+        "required": ["id", "universeId", "slug", "title", "genres", "status", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "universeId": { "type": "string", "format": "uuid" },
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "tagline": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "coverImageUrl": { "type": "string", "format": "uri", "nullable": true },
+          "genres": { "type": "array", "items": { "type": "string" } },
+          "status": { "$ref": "#/components/schemas/SeriesStatus" },
+          "updateSchedule": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SeriesStatus": {
+        "type": "string",
+        "enum": ["draft", "ongoing", "hiatus", "completed"]
+      },
+      "Comic": {
+        "type": "object",
+        "required": ["id", "createdBy", "universeId", "slug", "imageUrl", "publishedAt", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "createdBy": { "type": "string", "format": "uuid" },
+          "universeId": { "type": "string", "format": "uuid" },
+          "seriesId": { "type": "string", "format": "uuid", "nullable": true },
+          "positionInSeries": { "type": "integer", "nullable": true },
+          "slug": { "type": "string" },
+          "title": { "type": "string", "nullable": true },
+          "imageUrl": { "type": "string", "format": "uri" },
+          "altText": { "type": "string", "nullable": true },
+          "caption": { "type": "string", "nullable": true },
+          "transcript": { "type": "string", "nullable": true },
+          "publishedAt": { "type": "string", "format": "date-time" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Character": {
+        "type": "object",
+        "required": ["id", "createdBy", "universeId", "slug", "name", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "createdBy": { "type": "string", "format": "uuid" },
+          "universeId": { "type": "string", "format": "uuid" },
+          "slug": { "type": "string" },
+          "name": { "type": "string" },
+          "artUrl": { "type": "string", "format": "uri", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
 }

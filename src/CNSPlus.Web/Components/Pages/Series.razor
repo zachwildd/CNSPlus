@@ -1,0 +1,135 @@
+@page "/collection/{Slug}"
+@layout PublicLayout
+
+<PageTitle>Comic 1 · comicplus</PageTitle>
+<SectionContent SectionName="page-title">Comic Number 1 By Sheldon Lloyd</SectionContent>
+
+@*
+   The upstream Webcomic-plus template sets <body class="collection"> on
+   the series view to swap main's background and the active nav highlight
+   to the cover-image treatment. Blazor pages can't set body classes
+   directly; instead we inject scoped overrides via HeadContent that
+   replicate the .collection main and .collection .main-nav li.is-active
+   rules from webcomic-plus.css. When the user navigates away, the
+   HeadContent unmounts and the overrides disappear.
+*@
+<SectionContent SectionName="head-extras">
+    <style>
+        main {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%),
+                url(https://img00.deviantart.net/6134/i/2011/172/4/b/eclipse_the_cyber_warrior_by_sheldon227-d3jm86w.jpg) fixed;
+            background-size: cover;
+        }
+        .main-nav li.is-active {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%),
+                url(https://img00.deviantart.net/6134/i/2011/172/4/b/eclipse_the_cyber_warrior_by_sheldon227-d3jm86w.jpg) fixed;
+            background-size: cover;
+        }
+    </style>
+</SectionContent>
+
+<SectionContent SectionName="hero">
+    <div class="comic-hero overflow-auto">
+        <div class="comic-thumbnail-cover float-left"></div>
+        <div class="overflow-auto">
+            <div class="comic-heading overflow-auto">
+                <h3 class="float-right">Chapters (1 out of 10 Available)</h3>
+                <h3><a href="/comic">Start reading » Comic Number 1</a></h3>
+            </div>
+            <div class="comic-details overflow-auto">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut laoreet urna non
+                    condimentum ultrices. Suspendisse elementum metus ac nibh gravida turpis duis.
+                </p>
+                <h5 class="float-left">Rated (PG-13)</h5>
+                <h5 class="float-right">Updates: Once a Week on Fridays</h5>
+            </div>
+        </div>
+    </div>
+</SectionContent>
+
+<SectionContent SectionName="aside">
+    <aside class="float-right aside">
+        <div class="ad container">
+            <span>Advertisement</span>
+            <div class="placeholder"></div>
+        </div>
+        <div class="blog-posts container">
+            <h3>Blog Posts</h3>
+            <ul>
+                <li><a>Title 1</a></li>
+                <li><a>Title 2</a></li>
+                <li><a>Title 3</a></li>
+                <li><a>Title 4</a></li>
+                <li><a>Title 5</a></li>
+            </ul>
+        </div>
+    </aside>
+</SectionContent>
+
+<div class="archive-comic container cf flexbox">
+    <div class="comic-thumbnail-progress"
+         style="background: linear-gradient(180deg, rgba(54,91,135,1) 0%, rgba(54,91,135,1) 25%, rgba(255,255,255,1) 25%);">
+        <div>25% Complete</div>
+    </div>
+    <div class="comic-thumbnail-cover float-left"></div>
+    <div class="archive-comic-action float-right">
+        <a href="/comic" class="button">Read</a>
+    </div>
+    <div class="archive-comic-content overflow-auto">
+        <div class="archive-comic-heading">
+            <h2>Chapter 1</h2>
+        </div>
+        <p class="archive-comic-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut laoreet urna non
+            condimentum ultrices. Suspendisse elementum metus ac nibh gravida turpis duis.
+        </p>
+    </div>
+</div>
+
+<div class="archive-comic container cf flexbox">
+    <div class="comic-thumbnail-progress"
+         style="background: linear-gradient(180deg, rgba(54,91,135,1) 0%, rgba(54,91,135,1) 5%, rgba(255,255,255,1) 5%);">
+        <div>5% Complete</div>
+    </div>
+    <div class="comic-thumbnail-cover float-left"></div>
+    <div class="archive-comic-action float-right">
+        <a class="button">Read</a>
+    </div>
+    <div class="archive-comic-content overflow-auto">
+        <div class="archive-comic-heading">
+            <h2>Chapter 2</h2>
+        </div>
+        <p class="archive-comic-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut laoreet urna non
+            condimentum ultrices. Suspendisse elementum metus ac nibh gravida turpis duis.
+        </p>
+    </div>
+</div>
+
+<div class="character-appearances">
+    <div class="character-appearances-header">
+        <div class="float-right">
+            <a class="character-appearances-previous pointer">&laquo;</a>
+            <a class="character-appearances-next pointer">&raquo;</a>
+        </div>
+        <h3>Characters in this series/collection</h3>
+
+        <div class="character-appearances-nav"></div>
+        <div class="character-appearances-list custom-scrollbar">
+            <ul>
+                <li><div class="comic-thumbnail-cover float-left"></div></li>
+                <li><div class="comic-thumbnail-cover float-left"></div></li>
+                <li><div class="comic-thumbnail-cover float-left"></div></li>
+                <li><div class="comic-thumbnail-cover float-left"></div></li>
+                <li><div class="comic-thumbnail-cover float-left"></div></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+}

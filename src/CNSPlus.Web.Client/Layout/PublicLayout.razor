@@ -2,8 +2,18 @@
 @inject NavigationManager Nav
 
 <HeadContent>
+    @*
+        The link to webcomic-plus.css MUST stay inside the layout's single
+        HeadContent. Blazor's HeadContent is "last-wins" — if a page also
+        declared <HeadContent>, this link would be replaced. So pages
+        contribute additional head content via the section below instead
+        of opening their own HeadContent.
+    *@
     <link rel="stylesheet" href="css/webcomic-plus.css" />
+    <SectionOutlet SectionName="head-extras" />
 </HeadContent>
+
+<SectionOutlet SectionName="hero" />
 
 <header class="header">
     <label for="main-nav" class="header-title float-left pointer">Comic Name</label>
@@ -34,6 +44,8 @@
 <main class="overflow-auto">
     @Body
 </main>
+
+<SectionOutlet SectionName="aside" />
 
 @code {
     private string IsActive(string path, bool exact = false)

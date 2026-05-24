@@ -1,0 +1,24 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{json,yml,yaml,js,jsx,ts,tsx,css,html,razor,sh}]
+indent_size = 2
+
+[*.{csproj,props,targets,xml,slnx}]
+indent_size = 2
+
+[*.cs]
+# Code-style — keep light. Real style lives in the formatter defaults.
+dotnet_style_namespace_match_folder = true:warning
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_using_directive_placement = outside_namespace:warning
+csharp_prefer_braces = true:warning
+csharp_new_line_before_open_brace = all
+dotnet_diagnostic.CS1591.severity = none

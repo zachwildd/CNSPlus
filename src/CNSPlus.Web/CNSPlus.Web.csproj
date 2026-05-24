@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CNSPlus.Web.Client\CNSPlus.Web.Client.csproj" />
+    <ProjectReference Include="..\CNSPlus.Shared\CNSPlus.Shared.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+  </ItemGroup>
+
+  <Target Name="BuildTailwind" BeforeTargets="Build">
+    <Exec Command="bash $(MSBuildThisFileDirectory)../../scripts/build-tailwind.sh" />
+  </Target>
+
+</Project>

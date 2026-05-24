@@ -1,0 +1,9 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CNSPlus API",
+    "version": "0.0.0",
+    "description": "Placeholder. Phase 2 replaces this with the real spec exported from CNSPlus.Api."
+  },
+  "paths": {}
+}

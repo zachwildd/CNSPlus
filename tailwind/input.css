@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* Tell Tailwind v4 where to find class usages. The CSS-first config form. */
+@source "../src/CNSPlus.Web/**/*.razor";
+@source "../src/CNSPlus.Web/**/*.cs";
+@source "../src/CNSPlus.Web.Client/**/*.razor";
+@source "../src/CNSPlus.Web.Client/**/*.cs";
+
+/* CNSPlus design tokens. Customize as the visual identity firms up. */
+@theme {
+    --color-brand-50:  oklch(0.97 0.02 264);
+    --color-brand-500: oklch(0.55 0.18 264);
+    --color-brand-700: oklch(0.40 0.18 264);
+}
+
+/* Blazor-generated validation styles. Applied automatically by EditForm. */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+.invalid {
+    outline: 1px solid #e50000;
+}
+.validation-message {
+    color: #e50000;
+}
+
+/* Error UI banner emitted by the host when an unhandled exception bubbles. */
+#blazor-error-ui {
+    color-scheme: light only;
+    background: #fff8c4;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}

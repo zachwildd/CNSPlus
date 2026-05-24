@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CNSPlus.Shared/CNSPlus.Shared.csproj" />
+    <Project Path="src/CNSPlus.Web.Client/CNSPlus.Web.Client.csproj" />
+    <Project Path="src/CNSPlus.Web/CNSPlus.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CNSPlus.Web.Client.Tests/CNSPlus.Web.Client.Tests.csproj" />
+    <Project Path="tests/CNSPlus.Web.Tests/CNSPlus.Web.Tests.csproj" />
+  </Folder>
+</Solution>

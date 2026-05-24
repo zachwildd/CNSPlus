@@ -1,0 +1,39 @@
+@page "/characters/{Slug}"
+@layout PublicLayout
+
+<PageTitle>Characters · comicplus</PageTitle>
+<SectionContent SectionName="page-title">Characters</SectionContent>
+
+<div id="kyshumu" class="character-profile">
+    <div class="character-header">
+        <h2>Kyshumu</h2>
+    </div>
+    <div class="flexbox character-content">
+        <div class="character-art">
+            <img src="https://pre00.deviantart.net/bdec/th/pre/i/2017/358/e/c/kyshumu_blaise_by_sheldon227-dbxpy7r.png" alt="Kyshumu Blaise" />
+        </div>
+        <div class="character-description">
+            <p>
+                Kyshumu Blaise is the Chief of the ReNet Network and number 1 ranked Cybervator. He is impulsive
+                and mistrustful but loyal and protective towards those he cares about. Although he is a Chief he
+                still tries to fight every chance he gets so that he can retain his number one ranking.
+            </p>
+            <p>
+                When Kyshumu fights —while going into burst drive mode—he pounces into action and roars with a
+                glass shattering battle cry thanks to his lion-leopard he synergizes with.
+            </p>
+            <p>
+                He originally started with just a leopard Cyber.Beast but was given a lion cyberbeast by his wife
+                Tomasina as a courting gift. He now uses a Lion-Leopard hybrid combined with his fire element and
+                strength ability. This enables him to have an unorthodox fighting style — although his specialty
+                is strength, he combines it with his fire element to generate power in short bursts. This gives
+                him incredible jumping ability, allowing him to be as fast as most speed-type cybervators and
+                jump as high as many flying types can fly.
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+}

@@ -1,24 +1,50 @@
 @inherits LayoutComponentBase
+@inject NavigationManager Nav
 
-<div class="min-h-screen flex flex-col bg-white text-neutral-900">
-    <header class="border-b border-neutral-200">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/" class="font-semibold text-lg">comicplus</a>
-            <nav class="text-sm text-neutral-600">
-                <a href="/creator/dashboard" class="hover:text-neutral-900">Creator</a>
-            </nav>
-        </div>
-    </header>
+<HeadContent>
+    <link rel="stylesheet" href="css/webcomic-plus.css" />
+</HeadContent>
 
-    <main class="flex-1">
-        <div class="max-w-5xl mx-auto px-4 py-8">
-            @Body
-        </div>
-    </main>
+<header class="header">
+    <label for="main-nav" class="header-title float-left pointer">Comic Name</label>
+    <h1><SectionOutlet SectionName="page-title" /></h1>
+</header>
+<input class="is-hidden" id="main-nav" type="checkbox" />
 
-    <footer class="border-t border-neutral-200">
-        <div class="max-w-5xl mx-auto px-4 py-3 text-xs text-neutral-500">
-            comicplus.net
-        </div>
-    </footer>
-</div>
+<nav class="main-nav float-left">
+    <ul>
+        <li class="@IsActive("/", exact: true)"><a href="/">Home</a></li>
+        <li class="@IsActive("/collection")">
+            <input class="is-hidden" type="checkbox" id="collection-list" />
+            <label for="collection-list" class="pointer">Collection</label>
+            <ul class="collection-list is-hidden">
+                <li><a href="/collection/comic-1">Comic 1</a></li>
+                <li><a>Comic 2</a></li>
+                <li><a>Comic 3</a></li>
+                <li><a>Comic 4</a></li>
+                <li><a>Comic 5</a></li>
+            </ul>
+        </li>
+        <li class="@IsActive("/characters")"><a href="/characters/kyshumu">Characters</a></li>
+        <li><a>Blog</a></li>
+        <li><a>Calendar</a></li>
+    </ul>
+</nav>
+
+<main class="overflow-auto">
+    @Body
+</main>
+
+@code {
+    private string IsActive(string path, bool exact = false)
+    {
+        var current = new Uri(Nav.Uri).AbsolutePath;
+        if (exact)
+        {
+            return current == path ? "is-active" : "";
+        }
+        return current == path || current.StartsWith(path + "/", StringComparison.Ordinal)
+            ? "is-active"
+            : "";
+    }
+}

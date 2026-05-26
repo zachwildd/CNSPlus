@@ -42,7 +42,21 @@
                 <a href="/comic/@_featured.Slug" class="block">
                     <div class="ink-edge bg-cream hard-shadow overflow-hidden relative aspect-[4/3]">
                         <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
-                        <img src="@_featured.ImageUrl" alt="@_featured.Title" class="w-full h-full object-cover block" />
+                        @if (IsBlank(_featured.ImageUrl))
+                        {
+                            <div class="absolute inset-0 flex items-center justify-center"
+                                 style="background-color:#fbf8f1;background-image:repeating-linear-gradient(45deg,#161210 0 2px,transparent 2px 16px);"
+                                 role="img"
+                                 aria-label="@(_featured.Title ?? _featured.Slug) — art pending">
+                                <div class="bg-cream ink-edge-2 px-4 py-2 -rotate-3">
+                                    <span class="font-slab text-sm tag uppercase">Art Pending</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="@_featured.ImageUrl" alt="@_featured.Title" class="w-full h-full object-cover block" />
+                        }
                         <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
                             LATEST
                         </div>
@@ -64,45 +78,59 @@
         </div>
     </section>
 
-    <!-- LATEST -->
+    <!-- ALL ISSUES -->
     <section class="reveal mb-14" style="animation-delay:.3s">
         <div class="flex items-baseline justify-between mb-4">
             <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
-                <span class="font-poster text-base tag">// LATEST PAGES</span>
+                <span class="font-poster text-base tag">// ALL ISSUES</span>
             </div>
             <a href="/comic/@(_featured?.Slug ?? "comic-1")" class="font-slab text-xs tag uppercase text-ink/70 hover:text-blood transition-colors">Open reader &rarr;</a>
         </div>
 
-        @if (_recent is null)
+        @if (_all is null)
         {
             <p class="font-slab text-sm tag uppercase text-ink/60">Loading…</p>
         }
-        else if (_recent.Count == 0)
+        else if (_all.Count == 0)
         {
             <div class="ink-edge bg-cream hard-shadow p-6">
-                <p class="font-slab text-sm tag uppercase text-ink/60">No pages yet.</p>
+                <p class="font-slab text-sm tag uppercase text-ink/60">No issues yet.</p>
             </div>
         }
         else
         {
-            <ul class="grid gap-5">
-                @foreach (var entry in _recent.Select((c, i) => new { Comic = c, Index = i + 1 }))
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                @foreach (var entry in _all.Select((c, i) => new { Comic = c, Index = i + 1 }))
                 {
                     <li>
                         <a href="/comic/@entry.Comic.Slug" class="block group">
-                            <div class="ink-edge bg-cream hard-shadow flex flex-col sm:flex-row overflow-hidden group-hover:-translate-y-0.5 transition-transform">
-                                <div class="sm:w-56 shrink-0 relative aspect-[4/3] sm:aspect-auto">
+                            <div class="ink-edge bg-cream hard-shadow overflow-hidden flex flex-col group-hover:-translate-y-0.5 transition-transform">
+                                <div class="relative aspect-[4/3]">
                                     <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
-                                    <img src="@entry.Comic.ImageUrl" alt="@(entry.Comic.Title ?? entry.Comic.Slug)" class="w-full h-full object-cover block" />
+                                    @if (IsBlank(entry.Comic.ImageUrl))
+                                    {
+                                        <div class="absolute inset-0 flex items-center justify-center"
+                                             style="background-color:#fbf8f1;background-image:repeating-linear-gradient(45deg,#161210 0 2px,transparent 2px 16px);"
+                                             role="img"
+                                             aria-label="@(entry.Comic.Title ?? entry.Comic.Slug) — art pending">
+                                            <div class="bg-cream ink-edge-2 px-4 py-2 -rotate-3">
+                                                <span class="font-slab text-sm tag uppercase">Art Pending</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@entry.Comic.ImageUrl" alt="@(entry.Comic.Title ?? entry.Comic.Slug)" class="w-full h-full object-cover block" />
+                                    }
                                     <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
                                         @($"{entry.Index:00}")
                                     </div>
                                 </div>
-                                <div class="flex-1 p-5 flex flex-col">
+                                <div class="flex-1 p-4 flex flex-col">
                                     <p class="font-slab text-[11px] tag uppercase text-blood mb-1">
                                         @entry.Comic.PublishedAt.UtcDateTime.ToString("MMM d, yyyy")
                                     </p>
-                                    <h3 class="font-poster text-2xl text-ink leading-tight">@(entry.Comic.Title ?? entry.Comic.Slug)</h3>
+                                    <h3 class="font-poster text-xl text-ink leading-tight">@(entry.Comic.Title ?? entry.Comic.Slug)</h3>
                                     @if (!string.IsNullOrWhiteSpace(entry.Comic.Caption))
                                     {
                                         <p class="font-body text-sm text-ink/70 mt-2 line-clamp-2">@entry.Comic.Caption</p>
@@ -159,12 +187,12 @@
 
 @code {
     private CNSPlus.Shared.Comic? _featured;
-    private IReadOnlyList<CNSPlus.Shared.Comic>? _recent;
+    private IReadOnlyList<CNSPlus.Shared.Comic>? _all;
     private IReadOnlyList<CNSPlus.Shared.Character>? _cast;
 
     protected override async Task OnInitializedAsync()
     {
-        var comicsTask = ComicsApi.ListAsync(featured: null, limit: 10);
+        var comicsTask = ComicsApi.ListAsync(featured: null, limit: null);
         var castTask = CharactersApi.ListAsync(limit: 4);
         await Task.WhenAll(comicsTask, castTask);
 
@@ -172,9 +200,12 @@
             .OrderByDescending(c => c.PublishedAt)
             .ToList();
         _featured = comics.FirstOrDefault();
-        _recent = comics.Skip(1).Take(3).ToList();
+        _all = comics;
         _cast = await castTask;
     }
+
+    private static bool IsBlank(Uri? uri)
+        => uri is null || uri.AbsoluteUri == "about:blank";
 
     private static string InitialsOf(string name)
     {

@@ -69,7 +69,80 @@ else
             </div>
         </section>
 
-        <section class="reveal mt-12" style="animation-delay:.3s">
+        @{ var abilities = _character.Abilities?.Where(a => a.HasContent).ToList() ?? new(); }
+        @if (abilities.Count > 0)
+        {
+            <section class="reveal mt-12" style="animation-delay:.3s">
+                <div class="flex items-end justify-between flex-wrap gap-3 mb-4">
+                    <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+                        <span class="font-poster text-base tag">// ABILITIES</span>
+                    </div>
+                    <span class="font-slab text-[11px] tag uppercase text-ink/60">
+                        @abilities.Count entr@(abilities.Count == 1 ? "y" : "ies") on file
+                    </span>
+                </div>
+
+                <div class="abilities ink-edge bg-cream hard-shadow p-5 md:p-7 relative">
+                    @for (var i = 0; i < abilities.Count; i++)
+                    {
+                        <input class="ability-radio" type="radio" name="abil-@_character.Slug"
+                               id="abil-@_character.Slug-@i" checked="@(i == 0)" />
+                    }
+
+                    <div class="abilities-tabs grid grid-cols-5 gap-2 md:gap-3 mb-6">
+                        @for (var i = 0; i < abilities.Count; i++)
+                        {
+                            var a = abilities[i];
+                            <label class="ability-tab" for="abil-@_character.Slug-@i" title="@a.Name">
+                                <span class="ability-tab-key">@a.Key</span>
+                                <span class="ability-tab-type">@(a.Type ?? "")</span>
+                            </label>
+                        }
+                    </div>
+
+                    <div class="ability-panels relative">
+                        @for (var i = 0; i < abilities.Count; i++)
+                        {
+                            var a = abilities[i];
+                            <div class="ability-panel grid-cols-1 md:grid-cols-[5fr_6fr] gap-5 md:gap-7 items-stretch">
+                                <div class="ink-edge-2 bg-bone hard-shadow-sm overflow-hidden relative aspect-[4/3] md:aspect-auto">
+                                    <div class="absolute inset-0 halftone opacity-[0.18] pointer-events-none"></div>
+                                    @if (a.ImageUrl is not null)
+                                    {
+                                        <img src="@a.ImageUrl"
+                                             alt="@a.Name"
+                                             class="w-full h-full object-cover block relative" />
+                                    }
+                                    else
+                                    {
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span class="ability-watermark">@a.Key</span>
+                                        </div>
+                                    }
+                                    <div class="absolute bottom-0 left-0 bg-ink text-flame px-3 py-1 font-poster text-xs tag uppercase z-10">
+                                        @a.Key · @(a.Type ?? "")
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-center py-2">
+                                    <div class="inline-block skew-tab bg-blood text-cream px-3 py-1 mb-3 hard-shadow-sm self-start">
+                                        <span class="font-slab text-[11px] tag uppercase">@(a.Type ?? "Ability")</span>
+                                    </div>
+                                    <h3 class="font-poster text-3xl md:text-5xl leading-[0.9] text-ink uppercase mb-3">
+                                        @a.Name
+                                    </h3>
+                                    <p class="font-body text-[15px] md:text-base leading-relaxed text-ink/85">
+                                        @a.Description
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+
+        <section class="reveal mt-12" style="animation-delay:.35s">
             <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 mb-4 hard-shadow-sm">
                 <span class="font-poster text-base tag">// FILE NOTES</span>
             </div>

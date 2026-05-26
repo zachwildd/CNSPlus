@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comic Panel Placeholders</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: {
+        poster: ['Bungee','cursive'],
+        slab: ['"Archivo Black"','sans-serif'],
+        body: ['Archivo','sans-serif'],
+      },
+      colors: {
+        bone:'#f4efe6', cream:'#fbf8f1', ink:'#161210',
+        blood:'#e23528', flame:'#f7a814', steel:'#cfc8bd',
+      },
+    }},
+  };
+</script>
+<style>
+  body { background:#f4efe6; }
+  .ink-edge { border:3px solid #161210; }
+  .ink-edge-2 { border:2px solid #161210; }
+  .hard-shadow { box-shadow:6px 6px 0 #161210; }
+  .tag { letter-spacing:.04em; }
+  .stripe { background:repeating-linear-gradient(45deg,#161210 0 14px,#f7a814 14px 28px); }
+
+  /* A — diagonal hazard hatch */
+  .ph-hatch {
+    background-color:#fbf8f1;
+    background-image:repeating-linear-gradient(45deg,#161210 0 2px,transparent 2px 16px);
+  }
+  /* B — photographer's "X" cross */
+  .ph-cross {
+    background-color:#fbf8f1;
+    background-image:
+      linear-gradient(to top right, transparent calc(50% - 1.5px), #161210 calc(50% - 1.5px), #161210 calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+      linear-gradient(to bottom right, transparent calc(50% - 1.5px), #161210 calc(50% - 1.5px), #161210 calc(50% + 1.5px), transparent calc(50% + 1.5px));
+  }
+  /* C — halftone dots */
+  .ph-dots {
+    background-color:#fbf8f1;
+    background-image:radial-gradient(#16121022 3px, transparent 3.5px);
+    background-size:18px 18px;
+  }
+  /* D — grid / thumbnail paper */
+  .ph-grid {
+    background-color:#fbf8f1;
+    background-image:
+      linear-gradient(#16121014 1px,transparent 1px),
+      linear-gradient(90deg,#16121014 1px,transparent 1px);
+    background-size:20px 20px;
+  }
+  .dashed { border:3px dashed #161210; }
+</style>
+</head>
+<body class="font-body text-ink antialiased p-6 md:p-10">
+
+  <div class="max-w-5xl mx-auto">
+    <div class="stripe h-3 w-full mb-6"></div>
+    <h1 class="font-poster text-3xl md:text-4xl mb-2">PANEL PLACEHOLDERS</h1>
+    <p class="text-ink/70 mb-8 max-w-2xl">Five styles for marking a panel as “art goes here.” Each is deliberately rough so it never reads as finished. Pick one and reuse it everywhere for consistency.</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+
+      <!-- A: hazard hatch + label -->
+      <figure>
+        <div class="ink-edge hard-shadow ph-hatch aspect-[3/4] relative flex items-center justify-center">
+          <div class="bg-cream ink-edge-2 px-4 py-2 -rotate-3">
+            <span class="font-slab text-sm tag uppercase">Art Pending</span>
+          </div>
+          <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-2.5 py-1 ink-edge-2 -ml-0.5 -mt-0.5">07</div>
+        </div>
+        <figcaption class="font-slab text-[11px] tag uppercase text-ink/60 mt-2">A · Hazard hatch</figcaption>
+      </figure>
+
+      <!-- B: cross / TK -->
+      <figure>
+        <div class="ink-edge hard-shadow ph-cross aspect-[3/4] relative flex items-center justify-center">
+          <div class="bg-flame ink-edge-2 px-3 py-1.5 rotate-2">
+            <span class="font-poster text-xl text-ink">TK</span>
+          </div>
+        </div>
+        <figcaption class="font-slab text-[11px] tag uppercase text-ink/60 mt-2">B · Cross + “TK”</figcaption>
+      </figure>
+
+      <!-- C: dots + figure icon -->
+      <figure>
+        <div class="ink-edge hard-shadow ph-dots aspect-[3/4] relative flex flex-col items-center justify-center gap-3">
+          <svg viewBox="0 0 64 80" class="w-16 h-20" fill="none" stroke="#161210" stroke-width="3">
+            <circle cx="32" cy="20" r="11"/>
+            <path d="M12 76 Q12 44 32 40 Q52 44 52 76"/>
+          </svg>
+          <span class="font-slab text-[11px] tag uppercase text-ink/60">Figure here</span>
+        </div>
+        <figcaption class="font-slab text-[11px] tag uppercase text-ink/60 mt-2">C · Dots + figure</figcaption>
+      </figure>
+
+      <!-- D: thumbnail grid + dimensions -->
+      <figure>
+        <div class="ink-edge hard-shadow ph-grid aspect-[3/4] relative flex items-center justify-center">
+          <div class="text-center">
+            <div class="font-poster text-2xl text-ink/40">3:4</div>
+            <div class="font-slab text-[10px] tag uppercase text-ink/50 mt-1">rough thumb</div>
+          </div>
+        </div>
+        <figcaption class="font-slab text-[11px] tag uppercase text-ink/60 mt-2">D · Thumbnail grid</figcaption>
+      </figure>
+
+      <!-- E: dashed "drop art" -->
+      <figure>
+        <div class="dashed bg-cream aspect-[3/4] relative flex flex-col items-center justify-center gap-2">
+          <svg viewBox="0 0 48 48" class="w-10 h-10" fill="none" stroke="#161210" stroke-width="3" stroke-linecap="round">
+            <path d="M24 32V10M24 10l-9 9M24 10l9 9"/>
+            <path d="M8 36v4h32v-4"/>
+          </svg>
+          <span class="font-slab text-[11px] tag uppercase text-ink/60">Drop art here</span>
+        </div>
+        <figcaption class="font-slab text-[11px] tag uppercase text-ink/60 mt-2">E · Dashed dropzone</figcaption>
+      </figure>
+
+      <!-- usage example: in a strip -->
+      <figure>
+        <div class="ink-edge hard-shadow bg-cream aspect-[3/4] grid grid-rows-2 gap-1 p-1">
+          <div class="ph-hatch ink-edge-2 flex items-center justify-center">
+            <span class="font-slab text-[10px] tag uppercase bg-cream px-2 py-0.5 ink-edge-2">Panel 1</span>
+          </div>
+          <div class="ph-hatch ink-edge-2 flex items-center justify-center">
+            <span class="font-slab text-[10px] tag uppercase bg-cream px-2 py-0.5 ink-edge-2">Panel 2</span>
+          </div>
+        </div>
+        <figcaption class="font-slab text-[11px] tag uppercase text-ink/60 mt-2">F · Multi-panel strip</figcaption>
+      </figure>
+
+    </div>
+    <div class="stripe h-3 w-full mt-8"></div>
+  </div>
+</body>
+</html>

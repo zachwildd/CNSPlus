@@ -18,9 +18,40 @@ He originally started with just a leopard Cyber.Beast but was given a lion cyber
 
   </modes>
   <abilities>
-    <!-- I wanna be able to show a list of the characters abilities. 
-    Basically these are just descriptions, right we don't have like 
-    a scheme for them, but that would be cool. I think and it seems 
-    like it's something that would be an aspect of each of the characters -->
+    <ability>
+      <key>P</key>
+      <type>Passive</type>
+      <name>Burst Drive</name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[Charges with every blow landed and taken. When the meter peaks, Kyshumu enters Burst Drive — pupils blown wide, fire-rimmed, every muscle running hot — and the next ability he uses costs nothing and hits twice.]]></description>
+    </ability>
+    <ability>
+      <key>Q</key>
+      <type>Ability 1</type>
+      <name>Lion-Leopard Synergy</name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[Bonds with both halves of his hybrid Cyber.Beast at once — the leopard for the lunge, the lion for the impact. A short-range pounce that closes the gap and lands with a shockwave through whatever's standing where the target used to be.]]></description>
+    </ability>
+    <ability>
+      <key>W</key>
+      <type>Ability 2</type>
+      <name>Fire-Element Burst</name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[Channels the fire element through a strike. Power is generated in a single concentrated spike rather than sustained output — devastating on contact, exhausting after. Used to break guards, walls, and the occasional contract.]]></description>
+    </ability>
+    <ability>
+      <key>E</key>
+      <type>Ability 3</type>
+      <name>Skyleap</name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[Combines fire and strength into the legs and detonates downward. Kyshumu launches high enough to meet flying-type Cybervators in their own air, then comes down somewhere he wasn't supposed to be able to reach.]]></description>
+    </ability>
+    <ability>
+      <key>R</key>
+      <type>Ultimate</type>
+      <name>Glass-Shattering Roar</name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[The lion side surfaces. A battle cry pitched to crack any structure tuned to a resonance — armor, barriers, the inside of an opponent's helmet. The signature opening move of the Chief of the ReNet Network, and the reason most fights end before they start.]]></description>
+    </ability>
   </abilities>
 </character>

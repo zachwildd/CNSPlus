@@ -8,4 +8,49 @@
   <description><![CDATA[— description pending —]]></description>
   <createdAt>2026-05-25T00:00:00Z</createdAt>
   <updatedAt>2026-05-25T00:00:00Z</updatedAt>
+  <abilities>
+    <!--
+      Fill in this character's abilities. Schema:
+        <key>      one of: P, Q, W, E, R  (Passive + 4 actives, LoL-style)
+        <type>     short label, e.g. "Passive", "Ability 1", "Ultimate"
+        <name>     the ability's display name
+        <imageUrl> optional; empty renders a halftone fallback with the key letter
+        <description> CDATA block, 1–3 sentences
+    -->
+    <ability>
+      <key>P</key>
+      <type>Passive</type>
+      <name></name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[]]></description>
+    </ability>
+    <ability>
+      <key>Q</key>
+      <type>Ability 1</type>
+      <name></name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[]]></description>
+    </ability>
+    <ability>
+      <key>W</key>
+      <type>Ability 2</type>
+      <name></name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[]]></description>
+    </ability>
+    <ability>
+      <key>E</key>
+      <type>Ability 3</type>
+      <name></name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[]]></description>
+    </ability>
+    <ability>
+      <key>R</key>
+      <type>Ultimate</type>
+      <name></name>
+      <imageUrl></imageUrl>
+      <description><![CDATA[]]></description>
+    </ability>
+  </abilities>
 </character>

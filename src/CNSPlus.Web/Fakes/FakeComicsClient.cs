@@ -69,7 +69,7 @@ public sealed class FakeComicsClient : IComicsClient
                 : null,
             Slug = root.Element("slug")!.Value,
             Title = root.Element("title")?.Value,
-            ImageUrl = new Uri(root.Element("imageUrl")!.Value, UriKind.RelativeOrAbsolute),
+            ImageUrl = ParseUri(root.Element("imageUrl")?.Value) ?? new Uri("about:blank"),
             AltText = root.Element("altText")?.Value,
             Caption = root.Element("caption")?.Value.Trim(),
             Transcript = root.Element("transcript")?.Value.Trim(),
@@ -79,6 +79,9 @@ public sealed class FakeComicsClient : IComicsClient
             UpdatedAt = DateTimeOffset.Parse(root.Element("updatedAt")!.Value),
         };
     }
+
+    private static Uri? ParseUri(string? value)
+        => string.IsNullOrWhiteSpace(value) ? null : new Uri(value, UriKind.RelativeOrAbsolute);
 
     private static IReadOnlyList<ComicPage>? ReadPages(XElement root)
     {
@@ -93,7 +96,7 @@ public sealed class FakeComicsClient : IComicsClient
                     .Select(panel => new ComicPanel
                     {
                         Number = int.Parse(panel.Element("number")!.Value, CultureInfo.InvariantCulture),
-                        ImageUrl = new Uri(panel.Element("imageUrl")!.Value, UriKind.RelativeOrAbsolute),
+                        ImageUrl = ParseUri(panel.Element("imageUrl")?.Value),
                         Caption = panel.Element("caption")?.Value.Trim(),
                         AltText = panel.Element("altText")?.Value,
                     })

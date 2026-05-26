@@ -14,7 +14,7 @@ public sealed class ComicPage
 public sealed class ComicPanel
 {
     public int Number { get; set; }
-    public Uri ImageUrl { get; set; } = default!;
+    public Uri? ImageUrl { get; set; }
     public string? Caption { get; set; }
     public string? AltText { get; set; }
 }

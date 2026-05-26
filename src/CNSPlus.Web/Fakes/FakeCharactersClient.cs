@@ -64,6 +64,30 @@ public sealed class FakeCharactersClient : ICharactersClient
             Description = root.Element("description")?.Value.Trim(),
             CreatedAt = DateTimeOffset.Parse(root.Element("createdAt")!.Value),
             UpdatedAt = DateTimeOffset.Parse(root.Element("updatedAt")!.Value),
+            Abilities = ReadAbilities(root),
         };
     }
+
+    private static IReadOnlyList<CharacterAbility>? ReadAbilities(XElement root)
+    {
+        var container = root.Element("abilities");
+        if (container is null) return null;
+
+        var list = new List<CharacterAbility>();
+        foreach (var el in container.Elements("ability"))
+        {
+            var imageRaw = el.Element("imageUrl")?.Value.Trim();
+            list.Add(new CharacterAbility
+            {
+                Key = el.Element("key")?.Value.Trim() ?? "",
+                Type = NullIfBlank(el.Element("type")?.Value.Trim()),
+                Name = NullIfBlank(el.Element("name")?.Value.Trim()),
+                ImageUrl = string.IsNullOrWhiteSpace(imageRaw) ? null : new Uri(imageRaw, UriKind.RelativeOrAbsolute),
+                Description = NullIfBlank(el.Element("description")?.Value.Trim()),
+            });
+        }
+        return list;
+    }
+
+    private static string? NullIfBlank(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
 }

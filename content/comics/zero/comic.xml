@@ -6,8 +6,285 @@
   <positionInSeries>1</positionInSeries>
   <slug>zero</slug>
   <title>Zero</title>
-  <imageUrl>https://images-na.ssl-images-amazon.com/images/S/cmx-images-prod/Item/42907/DIG005263_1._SX1280_QL80_TTD_.jpg</imageUrl>
+  <imageUrl></imageUrl>
   <caption><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus quam purus, sit amet ornare urna pulvinar eget. Pellentesque magna eros, pretium sit.]]></caption>
+  <pages>
+    <page>
+      <number>1</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 30. Hooded prisoners crammed into a descending elevator; screams rise from below.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 29. Bursun and Yaharia stand calm while the others tremble.</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 28. "Hi, I'm Yaharia, Yaharia Akinosun. What's your name?"</caption>
+        </panel>
+        <panel>
+          <number>4</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 27. Bursun glances, then looks away. Silence.</caption>
+        </panel>
+        <panel>
+          <number>5</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 26. "Silly me — we don't have names. I named myself and assumed you did the same."</caption>
+        </panel>
+        <panel>
+          <number>6</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 25. "I know — I'll give you a name! How about…?"</caption>
+        </panel>
+        <panel>
+          <number>7</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 24. Reveal — the voice was never Bursun's thoughts. Yaharia is telepathic.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>2</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 23. "Bursun!!" — Yaharia delivers the chosen name.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 22. "How about it — sound good?"</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 21. Bursun, again, says nothing.</caption>
+        </panel>
+        <panel>
+          <number>4</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 20. "Hmm — I'll take that as a yes."</caption>
+        </panel>
+        <panel>
+          <number>5</number>
+          <imageUrl></imageUrl>
+          <caption>Floor 00. KSSHK — the doors part onto cold blue-white light.</caption>
+        </panel>
+        <panel>
+          <number>6</number>
+          <imageUrl></imageUrl>
+          <caption>"Well — looks like it's our turn."</caption>
+        </panel>
+        <panel>
+          <number>7</number>
+          <imageUrl></imageUrl>
+          <caption>The other prisoners beg as guards force them in. Bursun and Yaharia walk forward on their own.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>3</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Inside the linking chamber. Scientists pull down hoods and plug tails into the cradles.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>Seated in a circle — Bursun in profile, past the back of the cybervator before him.</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia pulls down her own hood.</caption>
+        </panel>
+        <panel>
+          <number>4</number>
+          <imageUrl></imageUrl>
+          <caption>Bursun's eyes are already closed. Yaharia's stay open. Everyone else is nervous.</caption>
+        </panel>
+        <panel>
+          <number>5</number>
+          <imageUrl></imageUrl>
+          <caption>Injections at the neck and shoulder. Bursun is already in cyberspace.</caption>
+        </panel>
+        <panel>
+          <number>6</number>
+          <imageUrl></imageUrl>
+          <caption>From the viewing room above: "This one's already hyper-linked." The others slump into the link.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>4</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Cyberspace. The cybervators glow with flowing hair, eyes but no mouths, numbers stamped on their chests.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>Bursun sits cross-legged, calm. The others scatter and run.</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia stands over him, talking. "Wow — it feels so real. My hallucinations have never felt this real before."</caption>
+        </panel>
+        <panel>
+          <number>4</number>
+          <imageUrl></imageUrl>
+          <caption>"Oh my goodness — look at your hair. And your mouth, it's gone. Do I look like that?"</caption>
+        </panel>
+        <panel>
+          <number>5</number>
+          <imageUrl></imageUrl>
+          <caption>Above the chamber: scientists watch their monitors. A cybervator's head detonates — "There goes another one."</caption>
+        </panel>
+        <panel>
+          <number>6</number>
+          <imageUrl></imageUrl>
+          <caption>Behind Bursun, a Honey Badger Cyber.Beast rises into frame. Yaharia, oblivious: "Ooh — look, a Cyber.Beast."</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>5</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>The Honey Badger Cyber.Beast lunges and swallows Bursun whole.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>6</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia, fanatical: "You — you ate my friend!"</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>She hurls herself at the beast, prying at its jaws. "Let him go!"</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>Something shifts inside the Cyber.Beast — its skin flares with unfamiliar light.</caption>
+        </panel>
+        <panel>
+          <number>4</number>
+          <imageUrl></imageUrl>
+          <caption>"Uh-oh. What did I dooo…?"</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>7</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Inside the beast: Bursun isn't being eaten — he's absorbing it.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>Back in the chamber, his vitals spike off the chart. His body glows.</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>The scientists in the viewing room go pale. No one has ever read like this.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>8</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>The other Cyber.Beasts turn away from the cybervators. They've noticed something new.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>They close in on Bursun from every side.</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>The whole pack piles on top of him.</caption>
+        </panel>
+        <panel>
+          <number>4</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia, watching: "Huh!?"</caption>
+        </panel>
+        <panel>
+          <number>5</number>
+          <imageUrl></imageUrl>
+          <caption>Bursun erupts in a column of light, hurling the pack outward.</caption>
+        </panel>
+        <panel>
+          <number>6</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia, astonished: "Wow. Is that…? Hey — Bursun! Is that you?"</caption>
+        </panel>
+        <panel>
+          <number>7</number>
+          <imageUrl></imageUrl>
+          <caption>He looks at her, says nothing, and turns back to the next Cyber.Beast.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>9</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia, thrilled, cheers him on as Bursun tears through them.</caption>
+        </panel>
+        <panel>
+          <number>2</number>
+          <imageUrl></imageUrl>
+          <caption>A Cyber.Beast swoops in from above and snatches him out of the air.</caption>
+        </panel>
+        <panel>
+          <number>3</number>
+          <imageUrl></imageUrl>
+          <caption>He breaks free mid-flight and crashes down onto the one beneath, mid-roar.</caption>
+        </panel>
+      </panels>
+    </page>
+    <page>
+      <number>10</number>
+      <panels>
+        <panel>
+          <number>1</number>
+          <imageUrl></imageUrl>
+          <caption>Yaharia leaps onto a Cyber.Beast of her own. "No fair — why should you get to have all the fun?"</caption>
+        </panel>
+      </panels>
+    </page>
+  </pages>
   <publishedAt>2017-02-08T00:00:00Z</publishedAt>
   <createdAt>2017-02-01T00:00:00Z</createdAt>
   <updatedAt>2017-02-01T00:00:00Z</updatedAt>

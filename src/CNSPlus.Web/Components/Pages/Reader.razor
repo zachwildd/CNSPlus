@@ -14,7 +14,10 @@
 else
 {
     var pageCount = _pages.Count;
-    var current = _pages[_currentIndex];
+    var currentIndex = ResolveCurrentIndex();
+    var current = _pages[currentIndex];
+    var prevNumber = currentIndex > 0 ? (int?)_pages[currentIndex - 1].Number : null;
+    var nextNumber = currentIndex < pageCount - 1 ? (int?)_pages[currentIndex + 1].Number : null;
 
     <main class="max-w-6xl mx-auto px-5 py-8 md:py-12">
 
@@ -40,7 +43,21 @@ else
                     <figure class="ink-edge bg-cream hard-shadow overflow-hidden relative">
                         <div class="relative aspect-[4/3]">
                             <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
-                            <img src="@panel.ImageUrl" alt="@(panel.AltText ?? panel.Caption ?? $"Panel {panel.Number}")" class="w-full h-full object-cover block" />
+                            @if (panel.ImageUrl is null)
+                            {
+                                <div class="absolute inset-0 flex items-center justify-center"
+                                     style="background-color:#fbf8f1;background-image:repeating-linear-gradient(45deg,#161210 0 2px,transparent 2px 16px);"
+                                     role="img"
+                                     aria-label="@(panel.AltText ?? panel.Caption ?? $"Panel {panel.Number} — art pending")">
+                                    <div class="bg-cream ink-edge-2 px-4 py-2 -rotate-3">
+                                        <span class="font-slab text-sm tag uppercase">Art Pending</span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="@panel.ImageUrl" alt="@(panel.AltText ?? panel.Caption ?? $"Panel {panel.Number}")" class="w-full h-full object-cover block" />
+                            }
                             <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
                                 @($"{panel.Number:00}")
                             </div>
@@ -57,36 +74,54 @@ else
         </section>
 
         <nav class="reveal flex items-center justify-between gap-3 border-t-2 border-ink pt-5" style="animation-delay:.28s">
-            <button type="button"
-                    class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform disabled:opacity-30 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
-                    disabled="@(_currentIndex == 0)"
-                    @onclick="PrevPage">
-                &larr; Prev page
-            </button>
+            @if (prevNumber is int prev)
+            {
+                <a href="@PageUrl(prev)" class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
+                    &larr; Prev page
+                </a>
+            }
+            else
+            {
+                <span class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm opacity-30 cursor-not-allowed">
+                    &larr; Prev page
+                </span>
+            }
 
             <ol class="flex flex-wrap items-center justify-center gap-2">
-                @for (var i = 0; i < pageCount; i++)
+                @foreach (var page in _pages)
                 {
-                    var idx = i;
-                    var isActive = idx == _currentIndex;
+                    var isActive = page.Number == current.Number;
                     <li>
-                        <button type="button"
-                                class="@PageDotClass(isActive)"
-                                @onclick="() => GoToPage(idx)"
-                                aria-label="@($"Go to page {_pages[idx].Number}")"
-                                aria-current="@(isActive ? "page" : null)">
-                            @($"{_pages[idx].Number:00}")
-                        </button>
+                        @if (isActive)
+                        {
+                            <span class="ink-edge-2 bg-ink text-flame font-poster text-xs px-3 py-1.5 hard-shadow-sm" aria-current="page">
+                                @($"{page.Number:00}")
+                            </span>
+                        }
+                        else
+                        {
+                            <a href="@PageUrl(page.Number)"
+                               class="ink-edge-2 bg-cream text-ink font-poster text-xs px-3 py-1.5 hard-shadow-sm hover:-translate-y-0.5 transition-transform inline-block"
+                               aria-label="@($"Go to page {page.Number}")">
+                                @($"{page.Number:00}")
+                            </a>
+                        }
                     </li>
                 }
             </ol>
 
-            <button type="button"
-                    class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform disabled:opacity-30 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
-                    disabled="@(_currentIndex >= pageCount - 1)"
-                    @onclick="NextPage">
-                Next page &rarr;
-            </button>
+            @if (nextNumber is int next)
+            {
+                <a href="@PageUrl(next)" class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
+                    Next page &rarr;
+                </a>
+            }
+            else
+            {
+                <span class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm opacity-30 cursor-not-allowed">
+                    Next page &rarr;
+                </span>
+            }
         </nav>
 
         <footer class="reveal mt-8 flex items-center justify-between font-slab text-xs tag uppercase text-ink/70" style="animation-delay:.36s">
@@ -100,9 +135,11 @@ else
 @code {
     [Parameter] public string? Slug { get; set; }
 
+    [SupplyParameterFromQuery(Name = "page")]
+    public int? PageNumber { get; set; }
+
     private Comic? _comic;
     private List<ComicPage> _pages = new();
-    private int _currentIndex;
 
     protected override async Task OnInitializedAsync()
     {
@@ -119,7 +156,6 @@ else
             _pages = (match.Pages is { Count: > 0 } pages
                 ? pages.ToList()
                 : new List<ComicPage> { SinglePageFallback(match) });
-            _currentIndex = 0;
         }
         catch (ApiException ex) when (ex.StatusCode == 404)
         {
@@ -127,24 +163,18 @@ else
         }
     }
 
-    private void PrevPage()
+    private int ResolveCurrentIndex()
     {
-        if (_currentIndex > 0) _currentIndex--;
+        if (_pages.Count == 0) return 0;
+        if (PageNumber is int n)
+        {
+            var idx = _pages.FindIndex(p => p.Number == n);
+            if (idx >= 0) return idx;
+        }
+        return 0;
     }
 
-    private void NextPage()
-    {
-        if (_currentIndex < _pages.Count - 1) _currentIndex++;
-    }
-
-    private void GoToPage(int index)
-    {
-        if (index >= 0 && index < _pages.Count) _currentIndex = index;
-    }
-
-    private static string PageDotClass(bool isActive) => isActive
-        ? "ink-edge-2 bg-ink text-flame font-poster text-xs px-3 py-1.5 hard-shadow-sm"
-        : "ink-edge-2 bg-cream text-ink font-poster text-xs px-3 py-1.5 hard-shadow-sm hover:-translate-y-0.5 transition-transform";
+    private string PageUrl(int number) => $"/comic/{Slug}?page={number}";
 
     private static ComicPage SinglePageFallback(Comic comic) => new()
     {

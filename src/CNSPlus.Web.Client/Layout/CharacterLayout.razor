@@ -1,0 +1,40 @@
+@inherits LayoutComponentBase
+@inject NavigationManager Nav
+
+<HeadContent>
+    <SectionOutlet SectionName="head-extras" />
+</HeadContent>
+
+<div class="font-body text-ink antialiased selection:bg-blood selection:text-cream bg-bone min-h-screen flex flex-col">
+    <div class="stripe h-3 w-full shrink-0"></div>
+
+    <nav class="border-b-2 border-ink bg-cream shrink-0">
+        <div class="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between gap-4">
+            <a href="/" class="font-poster text-ink text-lg tag uppercase whitespace-nowrap">comic<span class="text-blood">plus</span></a>
+            <ul class="flex flex-wrap gap-4 md:gap-6 font-slab text-xs tag uppercase">
+                <li><a href="/" class="@LinkClass("/", exact: true)">Home</a></li>
+                <li><a href="/collection/comic-1" class="@LinkClass("/collection")">Comics</a></li>
+                <li><a href="/characters" class="@LinkClass("/characters")">Characters</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="grow">
+        @Body
+    </div>
+
+    <div class="stripe h-3 w-full shrink-0 mt-12"></div>
+</div>
+
+@code {
+    private string LinkClass(string path, bool exact = false)
+    {
+        var current = new Uri(Nav.Uri).AbsolutePath;
+        var isActive = exact
+            ? current == path
+            : current == path || current.StartsWith(path + "/", StringComparison.Ordinal);
+        return isActive
+            ? "text-blood underline decoration-2 underline-offset-4 transition-colors"
+            : "text-ink hover:text-blood transition-colors";
+    }
+}

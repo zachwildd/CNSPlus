@@ -1,39 +1,196 @@
 @page "/characters/{Slug}"
-@layout PublicLayout
+@layout CharacterLayout
+@inject ICharactersClient CharactersApi
+@inject NavigationManager Nav
 
-<PageTitle>Characters · comicplus</PageTitle>
-<SectionContent SectionName="page-title">Characters</SectionContent>
+<PageTitle>@(_character?.Name ?? "Characters") · comicplus</PageTitle>
 
-<div id="kyshumu" class="character-profile">
-    <div class="character-header">
-        <h2>Kyshumu</h2>
-    </div>
-    <div class="flexbox character-content">
-        <div class="character-art">
-            <img src="https://pre00.deviantart.net/bdec/th/pre/i/2017/358/e/c/kyshumu_blaise_by_sheldon227-dbxpy7r.png" alt="Kyshumu Blaise" />
-        </div>
-        <div class="character-description">
-            <p>
-                Kyshumu Blaise is the Chief of the ReNet Network and number 1 ranked Cybervator. He is impulsive
-                and mistrustful but loyal and protective towards those he cares about. Although he is a Chief he
-                still tries to fight every chance he gets so that he can retain his number one ranking.
-            </p>
-            <p>
-                When Kyshumu fights —while going into burst drive mode—he pounces into action and roars with a
-                glass shattering battle cry thanks to his lion-leopard he synergizes with.
-            </p>
-            <p>
-                He originally started with just a leopard Cyber.Beast but was given a lion cyberbeast by his wife
-                Tomasina as a courting gift. He now uses a Lion-Leopard hybrid combined with his fire element and
-                strength ability. This enables him to have an unorthodox fighting style — although his specialty
-                is strength, he combines it with his fire element to generate power in short bursts. This gives
-                him incredible jumping ability, allowing him to be as fast as most speed-type cybervators and
-                jump as high as many flying types can fly.
-            </p>
-        </div>
-    </div>
-</div>
+@if (_character is null)
+{
+    <main class="max-w-6xl mx-auto px-5 py-8">
+        <p class="font-slab text-sm tag uppercase text-ink/60">Loading…</p>
+    </main>
+}
+else
+{
+    <main class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+
+        <header class="reveal flex flex-wrap items-center justify-between gap-3 mb-8" style="animation-delay:.03s">
+            <div class="skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+                <span class="font-poster text-sm tag">FIELD GUIDE // ENTRY @($"{_position:00}")</span>
+            </div>
+            <div class="font-slab text-xs text-ink/70 tag">THE KYSHUMU CHRONICLES</div>
+        </header>
+
+        <section class="grid md:grid-cols-[1.05fr_1fr] gap-7 items-stretch">
+
+            <div class="reveal relative" style="animation-delay:.12s">
+                <div class="ink-edge bg-cream hard-shadow overflow-hidden relative aspect-[3/4] md:aspect-auto md:h-full">
+                    <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                    @if (_character.ArtUrl is not null)
+                    {
+                        <img src="@_character.ArtUrl"
+                             alt="@_character.Name"
+                             class="w-full h-full object-cover block relative" />
+                    }
+                    else
+                    {
+                        <div class="w-full h-full flex items-center justify-center bg-steel/40">
+                            <span class="font-poster text-8xl text-ink/30">@InitialsOf(_character.Name)</span>
+                        </div>
+                    }
+                    <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
+                        @($"{_position:00}")
+                    </div>
+                    <div class="absolute bottom-0 inset-x-0 bg-ink/90 text-bone px-4 py-2 font-slab text-[11px] tag uppercase z-20">
+                        @_character.Slug
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal flex flex-col justify-center" style="animation-delay:.2s">
+                <p class="font-slab text-blood text-sm tag uppercase mb-1">
+                    Cyber.beast universe · entry @($"{_position:00}")
+                </p>
+                @{ var (head, tail) = SplitName(_character.Name); }
+                <h1 class="font-poster text-6xl md:text-7xl leading-[0.85] text-ink">
+                    @head<span class="text-blood">@tail</span>
+                </h1>
+                @if (FirstSentence(_character.Description) is { Length: > 0 } intro)
+                {
+                    <p class="font-body text-lg text-ink/70 mt-4 italic">@intro</p>
+                }
+
+                <div class="flex flex-wrap gap-3 mt-6">
+                    <a href="/characters" class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-3 py-1.5 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
+                        &larr; Roster
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal mt-12" style="animation-delay:.3s">
+            <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 mb-4 hard-shadow-sm">
+                <span class="font-poster text-base tag">// FILE NOTES</span>
+            </div>
+            <div class="ink-edge bg-cream hard-shadow p-6 md:p-8 relative">
+                <div class="absolute top-0 right-0 stripe h-full w-2"></div>
+                @{ var paragraphs = SplitParagraphs(_character.Description).ToList(); }
+                @if (paragraphs.Count == 0)
+                {
+                    <p class="font-slab text-[11px] tag uppercase text-blood">File notes pending.</p>
+                }
+                else
+                {
+                    <div class="md:columns-2 md:gap-8 font-body text-[15px] leading-relaxed text-ink/90 space-y-4 [&>p]:break-inside-avoid">
+                        @for (var i = 0; i < paragraphs.Count; i++)
+                        {
+                            @if (i == 0)
+                            {
+                                <p>
+                                    <span class="font-poster text-blood text-xl float-left mr-1.5 leading-none">@paragraphs[i][0]</span>@paragraphs[i].Substring(1)
+                                </p>
+                            }
+                            else
+                            {
+                                <p>@paragraphs[i]</p>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+
+        <footer class="reveal mt-12 flex items-center justify-between font-slab text-xs tag uppercase text-ink/70 border-t-2 border-ink pt-4" style="animation-delay:.5s">
+            @if (_prev is not null)
+            {
+                <a href="/characters/@_prev.Slug" class="hover:text-blood transition-colors">&larr; @_prev.Name</a>
+            }
+            else
+            {
+                <span class="opacity-30">&larr;</span>
+            }
+
+            <a href="/characters" class="hidden sm:inline hover:text-blood transition-colors">Roster</a>
+
+            @if (_next is not null)
+            {
+                <a href="/characters/@_next.Slug" class="hover:text-blood transition-colors">@_next.Name &rarr;</a>
+            }
+            else
+            {
+                <span class="opacity-30">&rarr;</span>
+            }
+        </footer>
+
+    </main>
+}
 
 @code {
     [Parameter] public string? Slug { get; set; }
+
+    private CNSPlus.Shared.Character? _character;
+    private CNSPlus.Shared.Character? _prev;
+    private CNSPlus.Shared.Character? _next;
+    private int _position;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var slug = Slug ?? "";
+            var all = await CharactersApi.ListAsync(limit: null);
+            var idx = -1;
+            for (var i = 0; i < all.Count; i++)
+            {
+                if (all[i].Slug == slug) { idx = i; break; }
+            }
+            if (idx < 0)
+            {
+                _character = await CharactersApi.GetBySlugAsync(slug);
+                _position = 0;
+                return;
+            }
+            _character = all[idx];
+            _position = idx + 1;
+            _prev = idx > 0 ? all[idx - 1] : null;
+            _next = idx < all.Count - 1 ? all[idx + 1] : null;
+        }
+        catch (ApiException ex) when (ex.StatusCode == 404)
+        {
+            Nav.NavigateTo("/not-found");
+        }
+    }
+
+    private static IEnumerable<string> SplitParagraphs(string? text) =>
+        string.IsNullOrWhiteSpace(text)
+            ? Array.Empty<string>()
+            : text.Split("\n\n", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+    private static string FirstSentence(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var trimmed = text.Trim();
+        // Treat the placeholder as no tagline rather than echoing the dash line.
+        if (trimmed.StartsWith("—") || trimmed.StartsWith("--")) return "";
+        var firstPara = trimmed.Split("\n\n", 2)[0];
+        var dot = firstPara.IndexOf('.');
+        if (dot > 0 && dot < firstPara.Length - 1) return firstPara[..(dot + 1)];
+        return firstPara.Length <= 140 ? firstPara : firstPara[..140] + "…";
+    }
+
+    private static (string Head, string Tail) SplitName(string name)
+    {
+        var upper = name.ToUpperInvariant();
+        var space = upper.IndexOf(' ');
+        if (space > 0 && space < upper.Length - 1) return (upper[..space], upper[space..]);
+        var mid = (upper.Length + 1) / 2;
+        return (upper[..mid], upper[mid..]);
+    }
+
+    private static string InitialsOf(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return string.Concat(parts.Take(2).Select(p => char.ToUpperInvariant(p[0])));
+    }
 }

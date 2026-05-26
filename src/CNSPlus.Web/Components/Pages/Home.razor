@@ -1,5 +1,6 @@
 @page "/"
 @layout PublicLayout
+@inject IComicsClient Comics
 
 <PageTitle>comicplus</PageTitle>
 <SectionContent SectionName="page-title">A creative commons webcomic template</SectionContent>
@@ -24,95 +25,43 @@
 </SectionContent>
 
 <div style="padding: 2% 0 0 1.7%">
-    <div class="comic-item-featured float-left">
-        <div class="comic-featured-heading">
-            <h2><a href="/collection/comic-1">Featured Comic</a></h2>
-            <span>Chapter 1</span>
-        </div>
-    </div>
-
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading">
-            <h2>Comic 1</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover"></div>
-        </div>
-    </div>
-
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading"
-             style="background: linear-gradient(90deg, rgba(54,91,135,1) 0%, rgba(54,91,135,1) 35%, rgba(255,255,255,1) 35%);">
-            <h2>Comic 2</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover"></div>
-            <div class="comic-item-description">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus quam purus,
-                    sit amet ornare urna pulvinar eget. Pellentesque magna eros, pretium sit.
-                </p>
+    @if (_comics is not null && _comics.Count > 0)
+    {
+        var featured = _comics[0];
+        <div class="comic-item-featured float-left"
+             style="background-image: url(@featured.ImageUrl);">
+            <div class="comic-featured-heading">
+                <h2><a href="/collection/comic-1">Featured Comic</a></h2>
+                <span>@featured.Title</span>
             </div>
         </div>
-    </div>
 
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading">
-            <h2>Comic 3</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover"></div>
-            <div class="comic-item-description">
-                <p>This is a description of a comic that has not been read yet</p>
+        @foreach (var comic in _comics.Skip(1))
+        {
+            <div class="comic-item flexbox">
+                <div class="comic-item-heading">
+                    <h2>@comic.Title</h2>
+                </div>
+                <div class="comic-item-content">
+                    <div class="comic-item-cover"
+                         style="background-image: url(@comic.ImageUrl);"></div>
+                    @if (!string.IsNullOrWhiteSpace(comic.Caption))
+                    {
+                        <div class="comic-item-description">
+                            <p>@comic.Caption</p>
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading">
-            <h2>Comic 4</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover placeholder"></div>
-            <div class="comic-item-description">
-                <p>This is a description of a comic that has not been read yet</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading">
-            <h2>Comic 5</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover"></div>
-            <div class="comic-item-description">
-                <p>This is a description of a comic that has not been read yet</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading">
-            <h2>Comic 6</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover"></div>
-            <div class="comic-item-description">
-                <p>This is a description of a comic that has not been read yet</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="comic-item flexbox">
-        <div class="comic-item-heading">
-            <h2>Comic 7</h2>
-        </div>
-        <div class="comic-item-content">
-            <div class="comic-item-cover"></div>
-            <div class="comic-item-description">
-                <p>This is a description of a comic that has not been read yet</p>
-            </div>
-        </div>
-    </div>
+        }
+    }
 </div>
+
+@code {
+    private IReadOnlyList<CNSPlus.Shared.Comic>? _comics;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _comics = await Comics.ListAsync(featured: null, limit: 10);
+    }
+}

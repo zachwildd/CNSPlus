@@ -11,6 +11,50 @@
     --color-brand-50:  oklch(0.97 0.02 264);
     --color-brand-500: oklch(0.55 0.18 264);
     --color-brand-700: oklch(0.40 0.18 264);
+
+    /* Character file palette — from demos/character.html. */
+    --color-bone:      #f4efe6;
+    --color-cream:     #fbf8f1;
+    --color-ink:       #161210;
+    --color-blood:     #e23528;
+    --color-rust:      #a82018;
+    --color-flame:     #f7a814;
+    --color-amberdeep: #e87a16;
+    --color-skin:      #7a5a52;
+    --color-steel:     #cfc8bd;
+
+    --font-poster: 'Bungee', cursive;
+    --font-slab:   'Archivo Black', sans-serif;
+    --font-body:   'Archivo', sans-serif;
+}
+
+/* Bespoke utility classes for the character file design. */
+.halftone {
+    background-image: radial-gradient(#161210 1.1px, transparent 1.2px);
+    background-size: 9px 9px;
+}
+.ink-edge   { border: 3px solid #161210; }
+.ink-edge-2 { border: 2px solid #161210; }
+.hard-shadow     { box-shadow: 7px 7px 0 #161210; }
+.hard-shadow-sm  { box-shadow: 4px 4px 0 #161210; }
+.hard-shadow-red { box-shadow: 6px 6px 0 #e23528; }
+.skew-tab     { transform: skewX(-9deg); }
+.skew-tab > * { transform: skewX(9deg); display: inline-block; }
+.stripe {
+    background: repeating-linear-gradient(45deg, #161210 0 14px, #f7a814 14px 28px);
+}
+.burst {
+    background: #f7a814;
+    clip-path: polygon(50% 0,61% 22%,85% 13%,76% 38%,100% 50%,76% 62%,85% 87%,61% 78%,50% 100%,39% 78%,15% 87%,24% 62%,0 50%,24% 38%,15% 13%,39% 22%);
+}
+.tag { letter-spacing: .04em; }
+.reveal {
+    opacity: 0;
+    transform: translateY(20px) rotate(-.4deg);
+    animation: pop .65s cubic-bezier(.18,1.2,.4,1) forwards;
+}
+@keyframes pop {
+    to { opacity: 1; transform: none; }
 }
 
 /* Blazor-generated validation styles. Applied automatically by EditForm. */

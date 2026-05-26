@@ -1,9 +1,6 @@
 # CNSPlus — Architecture Design
 
-> Status: **draft**. This is the architecture-only design for CNSPlus. The data
-> model (entities, ownership rules, page set, feature scope) is inherited from
-> [`/Users/zach/dev/sheldon/design/webcomicy-design.md`](../../design/webcomicy-design.md)
-> and is not duplicated here. This document covers project layout, hosting,
+> This document covers project layout, hosting,
 > client/server boundary, and the standing decisions about how the Blazor app
 > and the Node/Express API fit together.
 
@@ -57,8 +54,6 @@ A single REST API with a typed client is enough for v1.
 These are scoped to *how* CNSPlus is built. Product / feature goals live in
 the WebcomicY data-model design doc.
 
-### Goals
-
 - **Clean separation of frontend and backend.** The Blazor repo never embeds
   business logic that belongs on the server. Authorization, validation, and
   data shape are all the API's job. The Blazor side is presentation,
@@ -76,8 +71,7 @@ the WebcomicY data-model design doc.
   abstractions should not require knowing the Blazor ecosystem to read.
   No bespoke patterns where a vanilla one will do.
 
-### Non-goals for v1
-
+*Non-goals for v1*
 - Multi-region or multi-tenant-per-domain deployments.
 - Server-side rendering of *creator* pages (admin doesn't need SEO).
 - A separate BFF or "API gateway" layer in front of `CNSPlus.Api`.
@@ -187,6 +181,7 @@ SSR pages (in `CNSPlus.Web`) and Interactive WebAssembly pages (in
 `CNSPlus.Web.Client`) can use them. Server-only layouts (currently just
 `MainLayout` for the error/fallback path) stay in `CNSPlus.Web`.
 
+[this is not actually implemented and needs to change; i've since moved the the api in this repo ./api; i removed the old scrip to build the openapi.json so that should be added back to the api's package.json, instead of as a .sh script; also there is no CI verification]
 **Why is `openapi.json` committed?** The API lives in a separate repo, so
 the Blazor build needs a snapshot to generate against. Committing it makes
 the generated client deterministic and reviewable, and means `dotnet build`
@@ -424,6 +419,148 @@ list it explicitly as a `PackageReference`. Without it, the
 So both `CNSPlus.Web` and `CNSPlus.Web.Client` reference the same compiled
 DTOs and the same API client interface. Sharing types across the
 SSR-server and the WASM-client boundary is the whole point.
+
+### Fakes for development before the API exists
+
+While `CNSPlus.Api` doesn't exist yet, in-process fakes implement the
+typed client interfaces and serve fixtures from per-entity folders under
+`/content/`. They live at `src/CNSPlus.Web/Fakes/`:
+
+- `FakeCharactersClient : ICharactersClient` — reads
+  `content/characters/{slug}/character.xml`.
+- `FakeSeriesClient : ISeriesClient` — reads
+  `content/series/{slug}/series.xml` and, for `ListComicsAsync`, scans
+  `content/comics/*/comic.xml` and filters by `<seriesId>`.
+- `FakeComicsClient : IComicsClient` — scans `content/comics/*/comic.xml`.
+  `GetByIdAsync` enumerates all of them and matches on `<id>` (small N;
+  fine). `ListAsync` returns the whole set, optionally truncated by
+  `limit`; the `featured` flag is ignored because the DTO has no
+  `featured` field.
+- `ContentRoot` — DI singleton that resolves the absolute path to the
+  repository's `/content/` directory once. Defaults to `../../content`
+  relative to `IHostEnvironment.ContentRootPath` (which ASP.NET sets to
+  `src/CNSPlus.Web/`); override with the `Content:Root` config key.
+
+Each call opens the relevant file with `File.ReadAllTextAsync` and parses
+with `XDocument`. Reads are lazy — content edits show up on the next
+request without restarting the host. With only a handful of fixture
+files, IO and parse cost are negligible.
+
+#### Per-entity folder layout
+
+```
+content/
+  characters/
+    kyshumu/
+      character.xml
+      (image and any other binary assets the entity owns)
+  series/
+    comic-1/
+      series.xml
+  comics/
+    comic-1/
+      comic.xml
+    comic-2/
+      comic.xml
+    ...
+```
+
+Each entity owns a folder named after its slug. The canonical metadata
+file inside it is `{type}.xml` (`character.xml`, `series.xml`,
+`comic.xml`). Image files and any other binary assets the entity owns
+live alongside the XML. This generalizes cleanly to entities that
+acquire multiple images (panel pages, art alts, cover variants).
+
+#### XML conventions
+
+Element names mirror the JSON property names in `openapi/openapi.json`
+1:1 (`id`, `createdBy`, `universeId`, `seriesId`, `positionInSeries`,
+etc.). Prose fields (`description`, `caption`, `transcript`) are wrapped
+in `<![CDATA[…]]>` so authors can use literal newlines and angle
+brackets. Array fields use a wrapper + repeated child
+(`<genres><genre>action</genre><genre>sci-fi</genre></genres>`).
+Nullable / optional fields are omitted entirely from the XML.
+
+#### Image assets and `/content/` static-file serving
+
+The Web host serves `/content/*` directly from the on-disk content
+directory via `UseStaticFiles` mounted in `Program.cs`. URL fields in
+the XML (`artUrl`, `imageUrl`, `coverImageUrl`) can be either absolute
+URLs (matching what the real API will return once it issues CDN-backed
+links) or root-relative paths like `/content/characters/kyshumu/art.png`
+that point at files inside this directory. The fakes parse with
+`UriKind.RelativeOrAbsolute` so both forms work — useful while content
+is migrating from remote placeholders to local files.
+
+Root-relative URLs resolve against whatever host served the page, so
+the same XML works in dev (`localhost:5001`) and the eventual prod host
+without configuration. The static-file mount and the fakes both come out
+together when the real API takes over and assets move to a CDN.
+
+#### DI registration
+
+DI registration appends the fakes *after* the real `AddHttpClient<,>`
+lines so the fakes win (last-registration wins for service lookups);
+the static-file mount goes in the request pipeline after `MapStaticAssets`:
+
+```csharp
+// CNSPlus.Web/Program.cs
+builder.Services.AddHttpClient<IComicsClient, ComicsClient>(c => c.BaseAddress = apiBaseUri);
+// ...
+// Phase 3 fakes — remove this whole block when the real API is reachable.
+builder.Services.AddSingleton<ContentRoot>();
+builder.Services.AddScoped<ICharactersClient, FakeCharactersClient>();
+builder.Services.AddScoped<IComicsClient,     FakeComicsClient>();
+builder.Services.AddScoped<ISeriesClient,     FakeSeriesClient>();
+
+// ...later, after app.MapStaticAssets():
+var contentRoot = app.Services.GetRequiredService<ContentRoot>();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(contentRoot.Path),
+    RequestPath = "/content",
+});
+```
+
+The fakes throw `ApiException` with the right status code on misses, so
+pages get the same exception flow they will get against the real API. A
+page handles 404 with:
+
+```csharp
+catch (ApiException ex) when (ex.StatusCode == 404)
+{
+    Nav.NavigateTo("/not-found");
+}
+```
+
+This redirects (server-side 302) on SSR, taking the user to the
+existing `NotFound` page.
+
+The fakes are *only* on the server. WASM admin pages (phase 5+) still
+have the real typed clients registered in `CNSPlus.Web.Client/Program.cs`
+— they'll start working when the API exists, without changes.
+
+### DTO / page name collisions
+
+The Razor page class in `Pages/Character.razor` lives in
+`CNSPlus.Web.Components.Pages` as a class literally named `Character`.
+With `@using CNSPlus.Shared` in `_Imports.razor` (so pages can reference
+DTO types unqualified), the bare name `Character` resolves to the page
+class, not the DTO. Fully qualify the field type when this happens:
+
+```razor
+@code {
+    private CNSPlus.Shared.Character? _character;   // not just `Character`
+}
+```
+
+Affected page files today: `Character.razor`, `Series.razor`. New page
+files with the same name as a DTO (e.g. `Comic.razor` in phase 4) will
+need the same treatment.
+
+Renaming page files to avoid the collision (e.g. `CharacterPage.razor`)
+is the other option but feels worse — page names match the entity
+they're about, and a one-line fully-qualified field is cheap.
 
 ## 7. UI — vanilla Razor components, two stylesheets
 

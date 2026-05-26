@@ -1,0 +1,81 @@
+@page "/characters"
+@layout CharacterLayout
+@inject ICharactersClient CharactersApi
+
+<PageTitle>Characters · comicplus</PageTitle>
+
+<main class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+
+    <header class="reveal flex flex-wrap items-center justify-between gap-3 mb-8" style="animation-delay:.03s">
+        <div class="skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+            <span class="font-poster text-sm tag">FIELD GUIDE // ROSTER</span>
+        </div>
+        <div class="font-slab text-xs text-ink/70 tag">THE KYSHUMU CHRONICLES</div>
+    </header>
+
+    <div class="reveal mb-10" style="animation-delay:.1s">
+        <p class="font-slab text-blood text-sm tag uppercase mb-1">@(_characters?.Count ?? 0) entries · cyber.beast universe</p>
+        <h1 class="font-poster text-6xl md:text-7xl leading-[0.85] text-ink">
+            CHA<span class="text-blood">RACTERS</span>
+        </h1>
+    </div>
+
+    @if (_characters is null)
+    {
+        <p class="font-slab text-sm tag uppercase text-ink/60">Loading…</p>
+    }
+    else if (_characters.Count == 0)
+    {
+        <div class="ink-edge bg-cream hard-shadow p-6">
+            <p class="font-slab text-sm tag uppercase text-ink/60">No characters yet.</p>
+        </div>
+    }
+    else
+    {
+        <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            @foreach (var entry in _characters.Select((c, i) => new { Character = c, Index = i + 1 }))
+            {
+                <li class="reveal" style="@($"animation-delay:{0.04 * entry.Index:0.00}s")">
+                    <a href="/characters/@entry.Character.Slug" class="block group focus:outline-none">
+                        <div class="ink-edge bg-cream hard-shadow overflow-hidden relative aspect-[3/4] group-hover:-translate-y-1 group-focus-visible:-translate-y-1 transition-transform">
+                            <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                            @if (entry.Character.ArtUrl is not null)
+                            {
+                                <img src="@entry.Character.ArtUrl"
+                                     alt="@entry.Character.Name"
+                                     class="w-full h-full object-cover block" />
+                            }
+                            else
+                            {
+                                <div class="w-full h-full flex items-center justify-center bg-steel/40">
+                                    <span class="font-poster text-5xl text-ink/30">@InitialsOf(entry.Character.Name)</span>
+                                </div>
+                            }
+                            <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
+                                @($"{entry.Index:00}")
+                            </div>
+                            <div class="absolute bottom-0 inset-x-0 bg-ink/90 text-bone px-4 py-2 font-slab text-[11px] tag uppercase z-20">
+                                @entry.Character.Name
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</main>
+
+@code {
+    private IReadOnlyList<CNSPlus.Shared.Character>? _characters;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _characters = await CharactersApi.ListAsync(limit: null);
+    }
+
+    private static string InitialsOf(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return string.Concat(parts.Take(2).Select(p => char.ToUpperInvariant(p[0])));
+    }
+}

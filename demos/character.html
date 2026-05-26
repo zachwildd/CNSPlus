@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANTH — Character File</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          poster: ['Bungee', 'cursive'],
+          slab: ['"Archivo Black"', 'sans-serif'],
+          body: ['Archivo', 'sans-serif'],
+        },
+        colors: {
+          bone: '#f4efe6',
+          cream: '#fbf8f1',
+          ink: '#161210',
+          blood: '#e23528',
+          rust: '#a82018',
+          flame: '#f7a814',
+           amberdeep: '#e87a16',
+          skin: '#7a5a52',
+          steel: '#cfc8bd',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  body { background:#f4efe6; }
+  /* halftone dot texture */
+  .halftone {
+    background-image: radial-gradient(#161210 1.1px, transparent 1.2px);
+    background-size: 9px 9px;
+  }
+  .ink-edge { border: 3px solid #161210; }
+  .ink-edge-2 { border: 2px solid #161210; }
+  .hard-shadow { box-shadow: 7px 7px 0 #161210; }
+  .hard-shadow-sm { box-shadow: 4px 4px 0 #161210; }
+  .hard-shadow-red { box-shadow: 6px 6px 0 #e23528; }
+  .skew-tab { transform: skewX(-9deg); }
+  .skew-tab > * { transform: skewX(9deg); display:inline-block; }
+  .reveal { opacity:0; transform: translateY(20px) rotate(-.4deg); animation: pop .65s cubic-bezier(.18,1.2,.4,1) forwards; }
+  @keyframes pop { to { opacity:1; transform:none; } }
+  .stripe {
+    background: repeating-linear-gradient(45deg,#161210 0 14px,#f7a814 14px 28px);
+  }
+  .burst {
+    background:#f7a814;
+    clip-path: polygon(50% 0,61% 22%,85% 13%,76% 38%,100% 50%,76% 62%,85% 87%,61% 78%,50% 100%,39% 78%,15% 87%,24% 62%,0 50%,24% 38%,15% 13%,39% 22%);
+  }
+  .tag { letter-spacing:.04em; }
+</style>
+</head>
+<body class="font-body text-ink antialiased selection:bg-blood selection:text-cream overflow-x-hidden">
+
+  <!-- top warning stripe -->
+  <div class="stripe h-3 w-full"></div>
+
+  <div class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+
+    <!-- masthead -->
+    <header class="reveal flex flex-wrap items-center justify-between gap-3 mb-8" style="animation-delay:.03s">
+      <div class="skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+        <span class="font-poster text-sm tag">FIELD GUIDE // ENTRY 07</span>
+      </div>
+      <div class="font-slab text-xs text-ink/70 tag">THE KYSHUMU CHRONICLES</div>
+    </header>
+
+    <!-- HERO -->
+    <section class="grid md:grid-cols-[1.05fr_1fr] gap-7 items-stretch">
+
+      <!-- portrait panel -->
+      <div class="reveal relative" style="animation-delay:.12s">
+        <div class="ink-edge bg-cream hard-shadow overflow-hidden relative">
+          <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none"></div>
+          <img src="char.jpg" alt="Vanth, cyber-beast operative" class="w-full h-full object-cover block relative">
+          <!-- corner tab -->
+          <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5">07</div>
+          <!-- caption -->
+          <div class="absolute bottom-0 inset-x-0 bg-ink/90 text-bone px-4 py-2 font-slab text-[11px] tag uppercase">Combat form — flame ignited</div>
+        </div>
+        <!-- floating spark badge -->
+        <div class="hidden md:flex absolute -right-5 -bottom-5 w-24 h-24 burst items-center justify-center rotate-12">
+          <span class="font-poster text-ink text-[10px] text-center leading-tight -rotate-12">CLASS<br>S</span>
+        </div>
+      </div>
+
+      <!-- name + meta -->
+      <div class="reveal flex flex-col" style="animation-delay:.2s">
+        <p class="font-slab text-blood text-sm tag uppercase mb-1">Apex unit · designation feline-09</p>
+        <h1 class="font-poster text-6xl md:text-7xl leading-[0.85] text-ink">VAN<span class="text-blood">TH</span></h1>
+        <p class="font-body text-lg text-ink/70 mt-3 italic">"The Pale Lion of the Burning Ward"</p>
+
+        <!-- callout chips -->
+        <div class="flex flex-wrap gap-2 mt-5">
+          <span class="ink-edge-2 bg-flame text-ink font-slab text-xs px-3 py-1 hard-shadow-sm uppercase tag">Pyrokinetic</span>
+          <span class="ink-edge-2 bg-cream text-ink font-slab text-xs px-3 py-1 hard-shadow-sm uppercase tag">Augment: feline</span>
+          <span class="ink-edge-2 bg-blood text-cream font-slab text-xs px-3 py-1 hard-shadow-sm uppercase tag">Rogue</span>
+        </div>
+
+        <!-- stat tiles -->
+        <div class="grid grid-cols-2 gap-3 mt-6">
+          <div class="ink-edge-2 bg-cream p-3 hard-shadow-sm">
+            <div class="font-poster text-2xl text-blood leading-none">2.1<span class="text-sm">m</span></div>
+            <div class="font-slab text-[10px] tag uppercase text-ink/60 mt-1">Height</div>
+          </div>
+          <div class="ink-edge-2 bg-cream p-3 hard-shadow-sm">
+            <div class="font-poster text-2xl text-blood leading-none">∞</div>
+            <div class="font-slab text-[10px] tag uppercase text-ink/60 mt-1">Heat ceiling</div>
+          </div>
+          <div class="ink-edge-2 bg-cream p-3 hard-shadow-sm">
+            <div class="font-poster text-2xl text-blood leading-none">09</div>
+            <div class="font-slab text-[10px] tag uppercase text-ink/60 mt-1">Ward freed</div>
+          </div>
+          <div class="ink-edge-2 bg-cream p-3 hard-shadow-sm">
+            <div class="font-poster text-2xl text-blood leading-none">SEC9</div>
+            <div class="font-slab text-[10px] tag uppercase text-ink/60 mt-1">Origin</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BIO -->
+    <section class="reveal mt-12" style="animation-delay:.3s">
+      <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 mb-4 hard-shadow-sm">
+        <span class="font-poster text-base tag">// FILE NOTES</span>
+      </div>
+      <div class="ink-edge bg-cream hard-shadow p-6 md:p-8 relative">
+        <div class="absolute top-0 right-0 stripe h-full w-2"></div>
+        <div class="md:columns-2 md:gap-8 font-body text-[15px] leading-relaxed text-ink/90 space-y-4 [&>p]:break-inside-avoid">
+          <p><span class="font-poster text-blood text-xl float-left mr-1.5 leading-none">V</span>anth was the ninth augment to walk out of the Burning Ward alive, and the only one who walked out smiling. The corporate labs spliced feline reflexes and a heat-core into a body they expected to obey. They miscalculated the smile.</p>
+          <p>The pearl plating is grafted, not worn — fused to skin and bone, threaded with the red linework of an experimental cooling lattice that glows when the heat-core spins up. When Vanth ignites, the flame doesn't burn outward by accident. It is aimed.</p>
+          <p>Now Vanth runs the lower sectors as something between a folk hero and a fire alarm: freeing the wards the labs still operate, one collapsed roof at a time. The bounty grows monthly. So does the legend.</p>
+          <p class="font-slab text-[11px] tag uppercase text-blood pt-1">Last sighting: Burning Ward 12 — structure since condemned.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATIONSHIPS -->
+    <section class="reveal mt-12" style="animation-delay:.4s">
+      <div class="inline-block skew-tab bg-blood text-cream px-4 py-1.5 mb-4 hard-shadow-sm">
+        <span class="font-poster text-base tag">// THE PACK & THE HUNT</span>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-5">
+
+        <div class="ink-edge bg-cream hard-shadow-red p-5 relative hover:-translate-y-1 transition-transform">
+          <div class="w-14 h-14 ink-edge-2 bg-flame flex items-center justify-center font-poster text-2xl text-ink mb-3 hard-shadow-sm">N</div>
+          <h4 class="font-slab text-lg uppercase">Nessa</h4>
+          <span class="inline-block bg-ink text-flame font-slab text-[10px] tag uppercase px-2 py-0.5 my-2">Ally · handler</span>
+          <p class="text-sm text-ink/70 leading-snug">Ex-lab tech who cut Vanth's leash. Reads the heat-core like a heartbeat.</p>
+        </div>
+
+        <div class="ink-edge bg-cream hard-shadow-red p-5 relative hover:-translate-y-1 transition-transform">
+          <div class="w-14 h-14 ink-edge-2 bg-cream flex items-center justify-center font-poster text-2xl text-blood mb-3 hard-shadow-sm">R</div>
+          <h4 class="font-slab text-lg uppercase">Riggs</h4>
+          <span class="inline-block bg-flame text-ink font-slab text-[10px] tag uppercase px-2 py-0.5 my-2">Rival · packmate</span>
+          <p class="text-sm text-ink/70 leading-snug">Augment-08. Walked out of the Ward first. Has never let Vanth forget it.</p>
+        </div>
+
+        <div class="ink-edge bg-cream hard-shadow-red p-5 relative hover:-translate-y-1 transition-transform">
+          <div class="w-14 h-14 ink-edge-2 bg-blood flex items-center justify-center font-poster text-2xl text-cream mb-3 hard-shadow-sm">W</div>
+          <h4 class="font-slab text-lg uppercase">The Warden</h4>
+          <span class="inline-block bg-blood text-cream font-slab text-[10px] tag uppercase px-2 py-0.5 my-2">Nemesis</span>
+          <p class="text-sm text-ink/70 leading-snug">Designed the heat-core. Wants it back. Will take the body it's bolted to.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="reveal mt-12 flex items-center justify-between font-slab text-xs tag uppercase text-ink/70 border-t-3 border-ink pt-4" style="animation-delay:.5s">
+      <a href="#" class="hover:text-blood transition-colors">&larr; Riggs</a>
+      <span class="hidden sm:inline">Kyshumu Field Guide</span>
+      <a href="#" class="hover:text-blood transition-colors">The Warden &rarr;</a>
+    </footer>
+
+  </div>
+  <div class="stripe h-3 w-full"></div>
+</body>
+</html>

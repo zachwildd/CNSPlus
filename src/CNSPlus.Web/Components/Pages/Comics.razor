@@ -1,0 +1,72 @@
+@page "/comics"
+@layout CharacterLayout
+@inject IComicsClient ComicsApi
+
+<PageTitle>Comics · comicplus</PageTitle>
+
+<main class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+
+    <header class="reveal flex flex-wrap items-center justify-between gap-3 mb-8" style="animation-delay:.03s">
+        <div class="skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+            <span class="font-poster text-sm tag">FIELD GUIDE // ARCHIVE</span>
+        </div>
+        <div class="font-slab text-xs text-ink/70 tag">THE KYSHUMU CHRONICLES</div>
+    </header>
+
+    <div class="reveal mb-10" style="animation-delay:.1s">
+        <p class="font-slab text-blood text-sm tag uppercase mb-1">@(_comics?.Count ?? 0) entries · cyber.beast universe</p>
+        <h1 class="font-poster text-6xl md:text-7xl leading-[0.85] text-ink">
+            CO<span class="text-blood">MICS</span>
+        </h1>
+    </div>
+
+    @if (_comics is null)
+    {
+        <p class="font-slab text-sm tag uppercase text-ink/60">Loading…</p>
+    }
+    else if (_comics.Count == 0)
+    {
+        <div class="ink-edge bg-cream hard-shadow p-6">
+            <p class="font-slab text-sm tag uppercase text-ink/60">No comics yet.</p>
+        </div>
+    }
+    else
+    {
+        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var entry in _comics.Select((c, i) => new { Comic = c, Index = i + 1 }))
+            {
+                <li class="reveal" style="@($"animation-delay:{0.04 * entry.Index:0.00}s")">
+                    <a href="/comic/@entry.Comic.Slug" class="block group focus:outline-none">
+                        <div class="ink-edge bg-cream hard-shadow overflow-hidden relative aspect-[4/3] group-hover:-translate-y-1 group-focus-visible:-translate-y-1 transition-transform">
+                            <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                            <img src="@entry.Comic.ImageUrl"
+                                 alt="@(entry.Comic.Title ?? entry.Comic.Slug)"
+                                 class="w-full h-full object-cover block" />
+                            <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
+                                @($"{entry.Index:00}")
+                            </div>
+                            <div class="absolute bottom-0 inset-x-0 bg-ink/90 text-bone px-4 py-2 z-20">
+                                <p class="font-poster text-base tag uppercase text-bone leading-tight">@(entry.Comic.Title ?? entry.Comic.Slug)</p>
+                                <p class="font-slab text-[10px] tag uppercase text-bone/70 mt-0.5">@entry.Comic.PublishedAt.UtcDateTime.ToString("MMM d, yyyy")</p>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(entry.Comic.Caption))
+                        {
+                            <p class="font-body text-sm text-ink/70 mt-2 line-clamp-2">@entry.Comic.Caption</p>
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</main>
+
+@code {
+    private IReadOnlyList<Comic>? _comics;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var all = await ComicsApi.ListAsync(featured: null, limit: null);
+        _comics = all.OrderByDescending(c => c.PublishedAt).ToList();
+    }
+}

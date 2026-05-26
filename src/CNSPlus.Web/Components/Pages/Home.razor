@@ -26,7 +26,7 @@
             <p class="font-body text-lg text-ink/70 mt-4 italic">"The first true cybervators walk out of the burning dome."</p>
 
             <div class="flex flex-wrap gap-3 mt-6">
-                <a href="/collection/comic-1" class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
+                <a href="/comic/@(_featured?.Slug ?? "comic-1")" class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
                     Start reading &rarr;
                 </a>
                 <a href="/characters" class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
@@ -39,7 +39,7 @@
         <div class="reveal relative" style="animation-delay:.2s">
             @if (_featured is not null)
             {
-                <a href="/collection/comic-1" class="block">
+                <a href="/comic/@_featured.Slug" class="block">
                     <div class="ink-edge bg-cream hard-shadow overflow-hidden relative aspect-[4/3]">
                         <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
                         <img src="@_featured.ImageUrl" alt="@_featured.Title" class="w-full h-full object-cover block" />
@@ -70,7 +70,7 @@
             <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
                 <span class="font-poster text-base tag">// LATEST PAGES</span>
             </div>
-            <a href="/collection/comic-1" class="font-slab text-xs tag uppercase text-ink/70 hover:text-blood transition-colors">All chapters &rarr;</a>
+            <a href="/comic/@(_featured?.Slug ?? "comic-1")" class="font-slab text-xs tag uppercase text-ink/70 hover:text-blood transition-colors">Open reader &rarr;</a>
         </div>
 
         @if (_recent is null)
@@ -89,7 +89,7 @@
                 @foreach (var entry in _recent.Select((c, i) => new { Comic = c, Index = i + 1 }))
                 {
                     <li>
-                        <a href="/collection/comic-1" class="block group">
+                        <a href="/comic/@entry.Comic.Slug" class="block group">
                             <div class="ink-edge bg-cream hard-shadow flex flex-col sm:flex-row overflow-hidden group-hover:-translate-y-0.5 transition-transform">
                                 <div class="sm:w-56 shrink-0 relative aspect-[4/3] sm:aspect-auto">
                                     <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>

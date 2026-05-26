@@ -1,0 +1,19 @@
+app = "cnsplus-web"
+primary_region = "sjc"   # or whatever's nearest you
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  Api__BaseUrl = "https://api.comicplus.net"   # or wherever the API lives later
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

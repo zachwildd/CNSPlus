@@ -1,0 +1,172 @@
+@page "/comic/{Slug}"
+@layout CharacterLayout
+@inject IComicsClient ComicsApi
+@inject NavigationManager Nav
+
+<PageTitle>@(_comic?.Title ?? _comic?.Slug ?? "Reader") · comicplus</PageTitle>
+
+@if (_comic is null)
+{
+    <main class="max-w-6xl mx-auto px-5 py-8">
+        <p class="font-slab text-sm tag uppercase text-ink/60">Loading…</p>
+    </main>
+}
+else
+{
+    var pageCount = _pages.Count;
+    var current = _pages[_currentIndex];
+
+    <main class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+
+        <header class="reveal flex flex-wrap items-center justify-between gap-3 mb-8" style="animation-delay:.03s">
+            <div class="skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+                <span class="font-poster text-sm tag">READER // @(_comic.Title?.ToUpperInvariant() ?? _comic.Slug.ToUpperInvariant())</span>
+            </div>
+            <div class="font-slab text-xs text-ink/70 tag">PAGE @($"{current.Number:00}") / @($"{pageCount:00}")</div>
+        </header>
+
+        <section class="reveal mb-8" style="animation-delay:.1s">
+            <p class="font-slab text-blood text-sm tag uppercase mb-1">Cyber.beast universe · now reading</p>
+            @{ var (head, tail) = SplitTitle(_comic.Title ?? _comic.Slug); }
+            <h1 class="font-poster text-5xl md:text-6xl leading-[0.85] text-ink">
+                @head<span class="text-blood">@tail</span>
+            </h1>
+        </section>
+
+        <section class="reveal mb-10" style="animation-delay:.18s">
+            <div class="grid sm:grid-cols-2 gap-5">
+                @foreach (var panel in current.Panels)
+                {
+                    <figure class="ink-edge bg-cream hard-shadow overflow-hidden relative">
+                        <div class="relative aspect-[4/3]">
+                            <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                            <img src="@panel.ImageUrl" alt="@(panel.AltText ?? panel.Caption ?? $"Panel {panel.Number}")" class="w-full h-full object-cover block" />
+                            <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
+                                @($"{panel.Number:00}")
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(panel.Caption))
+                        {
+                            <figcaption class="bg-ink/90 text-bone px-4 py-2 font-slab text-[11px] tag uppercase">
+                                @panel.Caption
+                            </figcaption>
+                        }
+                    </figure>
+                }
+            </div>
+        </section>
+
+        <nav class="reveal flex items-center justify-between gap-3 border-t-2 border-ink pt-5" style="animation-delay:.28s">
+            <button type="button"
+                    class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform disabled:opacity-30 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
+                    disabled="@(_currentIndex == 0)"
+                    @onclick="PrevPage">
+                &larr; Prev page
+            </button>
+
+            <ol class="flex flex-wrap items-center justify-center gap-2">
+                @for (var i = 0; i < pageCount; i++)
+                {
+                    var idx = i;
+                    var isActive = idx == _currentIndex;
+                    <li>
+                        <button type="button"
+                                class="@PageDotClass(isActive)"
+                                @onclick="() => GoToPage(idx)"
+                                aria-label="@($"Go to page {_pages[idx].Number}")"
+                                aria-current="@(isActive ? "page" : null)">
+                            @($"{_pages[idx].Number:00}")
+                        </button>
+                    </li>
+                }
+            </ol>
+
+            <button type="button"
+                    class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform disabled:opacity-30 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
+                    disabled="@(_currentIndex >= pageCount - 1)"
+                    @onclick="NextPage">
+                Next page &rarr;
+            </button>
+        </nav>
+
+        <footer class="reveal mt-8 flex items-center justify-between font-slab text-xs tag uppercase text-ink/70" style="animation-delay:.36s">
+            <a href="/" class="hover:text-blood transition-colors">&larr; Home</a>
+            <span class="hidden sm:inline">@_comic.PublishedAt.UtcDateTime.ToString("MMM d, yyyy")</span>
+            <a href="/characters" class="hover:text-blood transition-colors">Roster &rarr;</a>
+        </footer>
+    </main>
+}
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+
+    private Comic? _comic;
+    private List<ComicPage> _pages = new();
+    private int _currentIndex;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var all = await ComicsApi.ListAsync(featured: null, limit: null);
+            var match = all.FirstOrDefault(c => c.Slug == Slug);
+            if (match is null)
+            {
+                Nav.NavigateTo("/not-found");
+                return;
+            }
+            _comic = match;
+            _pages = (match.Pages is { Count: > 0 } pages
+                ? pages.ToList()
+                : new List<ComicPage> { SinglePageFallback(match) });
+            _currentIndex = 0;
+        }
+        catch (ApiException ex) when (ex.StatusCode == 404)
+        {
+            Nav.NavigateTo("/not-found");
+        }
+    }
+
+    private void PrevPage()
+    {
+        if (_currentIndex > 0) _currentIndex--;
+    }
+
+    private void NextPage()
+    {
+        if (_currentIndex < _pages.Count - 1) _currentIndex++;
+    }
+
+    private void GoToPage(int index)
+    {
+        if (index >= 0 && index < _pages.Count) _currentIndex = index;
+    }
+
+    private static string PageDotClass(bool isActive) => isActive
+        ? "ink-edge-2 bg-ink text-flame font-poster text-xs px-3 py-1.5 hard-shadow-sm"
+        : "ink-edge-2 bg-cream text-ink font-poster text-xs px-3 py-1.5 hard-shadow-sm hover:-translate-y-0.5 transition-transform";
+
+    private static ComicPage SinglePageFallback(Comic comic) => new()
+    {
+        Number = 1,
+        Panels = new List<ComicPanel>
+        {
+            new()
+            {
+                Number = 1,
+                ImageUrl = comic.ImageUrl,
+                Caption = comic.Caption,
+                AltText = comic.AltText,
+            }
+        }
+    };
+
+    private static (string Head, string Tail) SplitTitle(string title)
+    {
+        var upper = title.ToUpperInvariant();
+        var space = upper.IndexOf(' ');
+        if (space > 0 && space < upper.Length - 1) return (upper[..space], upper[space..]);
+        var mid = (upper.Length + 1) / 2;
+        return (upper[..mid], upper[mid..]);
+    }
+}

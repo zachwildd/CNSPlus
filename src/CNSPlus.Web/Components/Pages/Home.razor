@@ -1,67 +1,184 @@
 @page "/"
-@layout PublicLayout
-@inject IComicsClient Comics
+@layout CharacterLayout
+@inject IComicsClient ComicsApi
+@inject ICharactersClient CharactersApi
 
-<PageTitle>comicplus</PageTitle>
-<SectionContent SectionName="page-title">A creative commons webcomic template</SectionContent>
+<PageTitle>Kyshumu Chronicles · Cyber.Beast</PageTitle>
 
-<SectionContent SectionName="aside">
-    <aside class="float-right aside is-hidden">
-        <div class="ad container">
-            <span>Advertisement</span>
-            <div class="placeholder"></div>
+<main class="max-w-6xl mx-auto px-5 py-8 md:py-12">
+
+    <header class="reveal flex flex-wrap items-center justify-between gap-3 mb-8" style="animation-delay:.03s">
+        <div class="skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+            <span class="font-poster text-sm tag">FIELD GUIDE // ISSUE 01</span>
         </div>
-        <div class="container list">
-            <h3>Blog Posts</h3>
-            <ul>
-                <li><a href="#">Title 1</a></li>
-                <li><a href="#">Title 2</a></li>
-                <li><a href="#">Title 3</a></li>
-                <li><a href="#">Title 4</a></li>
-                <li><a href="#">Title 5</a></li>
-            </ul>
-        </div>
-    </aside>
-</SectionContent>
+        <div class="font-slab text-xs text-ink/70 tag">CYBER.BEAST UNIVERSE</div>
+    </header>
 
-<div style="padding: 2% 0 0 1.7%">
-    @if (_comics is not null && _comics.Count > 0)
-    {
-        var featured = _comics[0];
-        <div class="comic-item-featured float-left"
-             style="background-image: url(@featured.ImageUrl);">
-            <div class="comic-featured-heading">
-                <h2><a href="/collection/comic-1">Featured Comic</a></h2>
-                <span>@featured.Title</span>
+    <!-- HERO -->
+    <section class="grid md:grid-cols-[1fr_1.05fr] gap-7 items-stretch mb-14">
+
+        <!-- title side -->
+        <div class="reveal flex flex-col justify-center" style="animation-delay:.12s">
+            <p class="font-slab text-blood text-sm tag uppercase mb-1">A creator-owned saga · by Sheldon Lloyd</p>
+            <h1 class="font-poster text-6xl md:text-7xl leading-[0.85] text-ink">
+                KYSHUMU<br /><span class="text-blood">CHRONICLES</span>
+            </h1>
+            <p class="font-body text-lg text-ink/70 mt-4 italic">"The first true cybervators walk out of the burning dome."</p>
+
+            <div class="flex flex-wrap gap-3 mt-6">
+                <a href="/collection/comic-1" class="ink-edge-2 bg-blood text-cream font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
+                    Start reading &rarr;
+                </a>
+                <a href="/characters" class="ink-edge-2 bg-cream text-ink font-slab text-xs tag uppercase px-4 py-2 hard-shadow-sm hover:-translate-y-0.5 transition-transform">
+                    The roster
+                </a>
             </div>
         </div>
 
-        @foreach (var comic in _comics.Skip(1))
-        {
-            <div class="comic-item flexbox">
-                <div class="comic-item-heading">
-                    <h2>@comic.Title</h2>
-                </div>
-                <div class="comic-item-content">
-                    <div class="comic-item-cover"
-                         style="background-image: url(@comic.ImageUrl);"></div>
-                    @if (!string.IsNullOrWhiteSpace(comic.Caption))
-                    {
-                        <div class="comic-item-description">
-                            <p>@comic.Caption</p>
+        <!-- featured visual -->
+        <div class="reveal relative" style="animation-delay:.2s">
+            @if (_featured is not null)
+            {
+                <a href="/collection/comic-1" class="block">
+                    <div class="ink-edge bg-cream hard-shadow overflow-hidden relative aspect-[4/3]">
+                        <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                        <img src="@_featured.ImageUrl" alt="@_featured.Title" class="w-full h-full object-cover block" />
+                        <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
+                            LATEST
                         </div>
-                    }
+                        <div class="absolute bottom-0 inset-x-0 bg-ink/90 text-bone px-4 py-2 font-slab text-[11px] tag uppercase z-20">
+                            @(_featured.Title ?? _featured.Slug)
+                        </div>
+                    </div>
+                </a>
+                <div class="hidden md:flex absolute -right-5 -bottom-5 w-24 h-24 burst items-center justify-center rotate-12">
+                    <span class="font-poster text-ink text-[10px] text-center leading-tight -rotate-12">NEW<br />PAGE</span>
                 </div>
+            }
+            else
+            {
+                <div class="ink-edge bg-cream hard-shadow aspect-[4/3] flex items-center justify-center">
+                    <span class="font-slab text-sm tag uppercase text-ink/40">No pages yet</span>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- LATEST -->
+    <section class="reveal mb-14" style="animation-delay:.3s">
+        <div class="flex items-baseline justify-between mb-4">
+            <div class="inline-block skew-tab bg-ink text-flame px-4 py-1.5 hard-shadow-sm">
+                <span class="font-poster text-base tag">// LATEST PAGES</span>
+            </div>
+            <a href="/collection/comic-1" class="font-slab text-xs tag uppercase text-ink/70 hover:text-blood transition-colors">All chapters &rarr;</a>
+        </div>
+
+        @if (_recent is null)
+        {
+            <p class="font-slab text-sm tag uppercase text-ink/60">Loading…</p>
+        }
+        else if (_recent.Count == 0)
+        {
+            <div class="ink-edge bg-cream hard-shadow p-6">
+                <p class="font-slab text-sm tag uppercase text-ink/60">No pages yet.</p>
             </div>
         }
-    }
-</div>
+        else
+        {
+            <ul class="grid gap-5">
+                @foreach (var entry in _recent.Select((c, i) => new { Comic = c, Index = i + 1 }))
+                {
+                    <li>
+                        <a href="/collection/comic-1" class="block group">
+                            <div class="ink-edge bg-cream hard-shadow flex flex-col sm:flex-row overflow-hidden group-hover:-translate-y-0.5 transition-transform">
+                                <div class="sm:w-56 shrink-0 relative aspect-[4/3] sm:aspect-auto">
+                                    <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                                    <img src="@entry.Comic.ImageUrl" alt="@(entry.Comic.Title ?? entry.Comic.Slug)" class="w-full h-full object-cover block" />
+                                    <div class="absolute top-0 left-0 bg-blood text-cream font-poster text-xs px-3 py-1.5 ink-edge-2 -ml-0.5 -mt-0.5 z-20">
+                                        @($"{entry.Index:00}")
+                                    </div>
+                                </div>
+                                <div class="flex-1 p-5 flex flex-col">
+                                    <p class="font-slab text-[11px] tag uppercase text-blood mb-1">
+                                        @entry.Comic.PublishedAt.UtcDateTime.ToString("MMM d, yyyy")
+                                    </p>
+                                    <h3 class="font-poster text-2xl text-ink leading-tight">@(entry.Comic.Title ?? entry.Comic.Slug)</h3>
+                                    @if (!string.IsNullOrWhiteSpace(entry.Comic.Caption))
+                                    {
+                                        <p class="font-body text-sm text-ink/70 mt-2 line-clamp-2">@entry.Comic.Caption</p>
+                                    }
+                                    <span class="font-slab text-xs tag uppercase text-ink/60 group-hover:text-blood transition-colors mt-auto pt-3">Read &rarr;</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+
+    <!-- CAST -->
+    <section class="reveal mb-4" style="animation-delay:.4s">
+        <div class="flex items-baseline justify-between mb-4">
+            <div class="inline-block skew-tab bg-blood text-cream px-4 py-1.5 hard-shadow-sm">
+                <span class="font-poster text-base tag">// THE CAST</span>
+            </div>
+            <a href="/characters" class="font-slab text-xs tag uppercase text-ink/70 hover:text-blood transition-colors">Full roster &rarr;</a>
+        </div>
+
+        @if (_cast is { Count: > 0 })
+        {
+            <ul class="grid grid-cols-2 sm:grid-cols-4 gap-5">
+                @foreach (var entry in _cast.Take(4).Select((c, i) => new { Character = c, Index = i + 1 }))
+                {
+                    <li>
+                        <a href="/characters/@entry.Character.Slug" class="block group">
+                            <div class="ink-edge bg-cream hard-shadow-red overflow-hidden relative aspect-[3/4] group-hover:-translate-y-1 transition-transform">
+                                <div class="absolute inset-0 halftone opacity-[0.05] pointer-events-none z-10"></div>
+                                @if (entry.Character.ArtUrl is not null)
+                                {
+                                    <img src="@entry.Character.ArtUrl" alt="@entry.Character.Name" class="w-full h-full object-cover block" />
+                                }
+                                else
+                                {
+                                    <div class="w-full h-full flex items-center justify-center bg-steel/40">
+                                        <span class="font-poster text-4xl text-ink/30">@InitialsOf(entry.Character.Name)</span>
+                                    </div>
+                                }
+                                <div class="absolute bottom-0 inset-x-0 bg-ink/90 text-bone px-3 py-1.5 font-slab text-[10px] tag uppercase z-20">
+                                    @entry.Character.Name
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+</main>
 
 @code {
-    private IReadOnlyList<CNSPlus.Shared.Comic>? _comics;
+    private CNSPlus.Shared.Comic? _featured;
+    private IReadOnlyList<CNSPlus.Shared.Comic>? _recent;
+    private IReadOnlyList<CNSPlus.Shared.Character>? _cast;
 
     protected override async Task OnInitializedAsync()
     {
-        _comics = await Comics.ListAsync(featured: null, limit: 10);
+        var comicsTask = ComicsApi.ListAsync(featured: null, limit: 10);
+        var castTask = CharactersApi.ListAsync(limit: 4);
+        await Task.WhenAll(comicsTask, castTask);
+
+        var comics = (await comicsTask)
+            .OrderByDescending(c => c.PublishedAt)
+            .ToList();
+        _featured = comics.FirstOrDefault();
+        _recent = comics.Skip(1).Take(3).ToList();
+        _cast = await castTask;
+    }
+
+    private static string InitialsOf(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return string.Concat(parts.Take(2).Select(p => char.ToUpperInvariant(p[0])));
     }
 }

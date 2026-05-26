@@ -11,7 +11,7 @@ split into two independently-deployable services across two repositories:
 
 | Repo | Stack | Role |
 | --- | --- | --- |
-| `CNSPlus` (this repo) | Blazor Web App on .NET 10 | The web frontend at `comicplus.net`. Owns rendering and user-facing UX. |
+| `CNSPlus` (this repo) | Blazor Web App on .NET 10 | The web frontend at `cyber-beast.cc`. Owns rendering and user-facing UX. |
 | `CNSPlus.Api` (separate repo, TBD) | Express.js + TypeScript (or JS) on Node | The REST API. Owns persistence, business rules, and authorization. |
 
 The two services communicate over HTTPS using a REST contract published as
@@ -19,7 +19,7 @@ OpenAPI 3.x. The Blazor project consumes that contract via an NSwag-generated
 typed client.
 
 ```
-                     comicplus.net
+                     cyber-beast.cc
                           │
                           ▼
               ┌────────────────────────┐
@@ -84,7 +84,7 @@ the WebcomicY data-model design doc.
 
 ```
 CNSPlus/
-├── CNAME                          # GitHub Pages → comicplus.net (currently)
+├── CNAME                          # GitHub Pages → cyber-beast.cc (currently)
 ├── LICENSE
 ├── README.md
 ├── global.json                    # Pins .NET SDK 10.x
@@ -610,7 +610,7 @@ via `<SectionOutlet>`. Pages fill them with `<SectionContent>`:
 @page "/characters/{Slug}"
 @layout PublicLayout
 
-<PageTitle>Characters · comicplus</PageTitle>
+<PageTitle>Characters · Cyber.Beast</PageTitle>
 <SectionContent SectionName="page-title">Characters</SectionContent>
 
 <div class="character-profile"> ... </div>
@@ -771,7 +771,7 @@ forwards it as an `Authorization: Bearer …` header to the API when needed.
 2. API verifies credentials.
 3. **The API sets the auth cookie itself** in its response (no exchange
    step on the Blazor side). The cookie has `HttpOnly`, `SameSite=Lax`,
-   `Domain=.comicplus.net`, `Secure` (in production), and expiry matching
+   `Domain=.cyber-beast.cc`, `Secure` (in production), and expiry matching
    the JWT.
 4. The browser never receives the JWT directly. It only receives the
    cookie, which scripts cannot read.
@@ -779,9 +779,9 @@ forwards it as an `Authorization: Bearer …` header to the API when needed.
 This requires the API and the Blazor host to share a parent registrable
 domain. The production deployment plan reflects that:
 
-- `comicplus.net` (or `www.comicplus.net`) → `CNSPlus.Web` on Fly.io
-- `api.comicplus.net` → `CNSPlus.Api` on Fly.io
-- Cookie domain `.comicplus.net` covers both.
+- `cyber-beast.cc` (or `www.cyber-beast.cc`) → `CNSPlus.Web` on Fly.io
+- `api.cyber-beast.cc` → `CNSPlus.Api` on Fly.io
+- Cookie domain `.cyber-beast.cc` covers both.
 
 Local development needs slightly different cookie attributes and explicit
 CORS — see §15.
@@ -921,8 +921,8 @@ V1 ships on **Fly.io**, with each service as a separate Fly app.
 
 | Fly app | Repo | Domain | Notes |
 | --- | --- | --- | --- |
-| `cnsplus-web` | `CNSPlus` (this repo) | `comicplus.net`, `www.comicplus.net` | ASP.NET Core host. Static WASM + Tailwind assets served from `wwwroot/` by the same process. |
-| `cnsplus-api` | `CNSPlus.Api` | `api.comicplus.net` | Node/Express. Owns Postgres connection, JWT signing. |
+| `cnsplus-web` | `CNSPlus` (this repo) | `cyber-beast.cc`, `www.cyber-beast.cc` | ASP.NET Core host. Static WASM + Tailwind assets served from `wwwroot/` by the same process. |
+| `cnsplus-api` | `CNSPlus.Api` | `api.cyber-beast.cc` | Node/Express. Owns Postgres connection, JWT signing. |
 
 Each repo holds its own `fly.toml` and `Dockerfile`. The Web Dockerfile is
 a two-stage build: a `node:lts` stage runs the Tailwind build, then a
@@ -933,7 +933,7 @@ HTTPS terminates at Fly's edge. Cookies are issued with `Secure=true` in
 production (the `Secure` attribute is conditional on `IWebHostEnvironment`
 / env config, not hardcoded — see §15 for the local dev setup).
 
-The existing GitHub Pages binding on `CNAME` (`comicplus.net`) gets cut
+The existing GitHub Pages binding on `CNAME` (`cyber-beast.cc`) gets cut
 over to the Fly app's address (`A`/`AAAA` records or Fly's edge
 hostnames) when v1 goes live. The placeholder GitHub Pages site can stay
 up until then; nothing is using the production domain yet.
@@ -986,7 +986,7 @@ cookie flow.
 | --- | --- | --- |
 | `HttpOnly` | `true` | `true` |
 | `SameSite` | `Lax` | `Lax` |
-| `Domain` | omitted (defaults to host) | `.comicplus.net` |
+| `Domain` | omitted (defaults to host) | `.cyber-beast.cc` |
 | `Secure` | `false` | `true` |
 | `Path` | `/` | `/` |
 | Expiry | matches JWT (e.g. 7d) | matches JWT |

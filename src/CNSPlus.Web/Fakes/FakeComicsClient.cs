@@ -73,9 +73,34 @@ public sealed class FakeComicsClient : IComicsClient
             AltText = root.Element("altText")?.Value,
             Caption = root.Element("caption")?.Value.Trim(),
             Transcript = root.Element("transcript")?.Value.Trim(),
+            Pages = ReadPages(root),
             PublishedAt = DateTimeOffset.Parse(root.Element("publishedAt")!.Value),
             CreatedAt = DateTimeOffset.Parse(root.Element("createdAt")!.Value),
             UpdatedAt = DateTimeOffset.Parse(root.Element("updatedAt")!.Value),
         };
+    }
+
+    private static IReadOnlyList<ComicPage>? ReadPages(XElement root)
+    {
+        var pagesEl = root.Element("pages");
+        if (pagesEl is null) return null;
+
+        return pagesEl.Elements("page")
+            .Select(p => new ComicPage
+            {
+                Number = int.Parse(p.Element("number")!.Value, CultureInfo.InvariantCulture),
+                Panels = (p.Element("panels")?.Elements("panel") ?? Enumerable.Empty<XElement>())
+                    .Select(panel => new ComicPanel
+                    {
+                        Number = int.Parse(panel.Element("number")!.Value, CultureInfo.InvariantCulture),
+                        ImageUrl = new Uri(panel.Element("imageUrl")!.Value, UriKind.RelativeOrAbsolute),
+                        Caption = panel.Element("caption")?.Value.Trim(),
+                        AltText = panel.Element("altText")?.Value,
+                    })
+                    .OrderBy(panel => panel.Number)
+                    .ToList(),
+            })
+            .OrderBy(p => p.Number)
+            .ToList();
     }
 }
